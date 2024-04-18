@@ -1,3 +1,4 @@
 /data/*
 /db_env
 .Rproj.user
+.Rhistory
