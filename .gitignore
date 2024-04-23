@@ -1,4 +1,7 @@
 /data/*
 /db_env
 .Rproj.user
+.Rproj.user\*
 .Rhistory
+.Rproj*
+*.png
