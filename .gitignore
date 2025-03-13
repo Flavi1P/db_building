@@ -5,3 +5,6 @@
 .Rhistory
 .Rproj*
 *.png3
+db_env/*
+Rproj.user*
+output/*
