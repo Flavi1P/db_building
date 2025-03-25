@@ -1,0 +1,62 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(reticulate)
+path <- here::here()
+db_env <- paste(path, "db_env", sep = "/")
+use_virtualenv(db_env)
+```
+
+Add a new chunk by clicking the *Insert Chunk* button on the toolbar or by pressing *Ctrl+Alt+I*.
+
+When you save the notebook, an HTML file containing the code and output will be saved alongside it (click the *Preview* button or press *Ctrl+Shift+K* to preview the HTML file).
+
+The preview shows you a rendered HTML copy of the contents of the editor. Consequently, unlike *Knit*, *Preview* does not run any R code chunks. Instead, the output of the chunk when it was last run in the editor is displayed.
+```{r libraries, message=FALSE, warning=FALSE, paged.print=FALSE}
+library(tidyverse)
+library(arrow)
+library(zoo)
+library(patchwork)
+library(sf)
+
+```
+
+```{r message=FALSE, warning=FALSE, paged.print=FALSE}
+bathymetry <- st_read("C:/Users/flapet/OneDrive - NOC/Documents/NRT_viz/biocarbon_nrt_data_viz/Data/ne_10m_bathymetry_all/ne_10m_bathymetry_J_1000.shp") |> 
+  st_cast("MULTILINESTRING")
+
+bathymetry_2000 <- st_read("C:/Users/flapet/OneDrive - NOC/Documents/NRT_viz/biocarbon_nrt_data_viz/Data/ne_10m_bathymetry_all/ne_10m_bathymetry_I_2000.shp") |> 
+  st_cast("MULTILINESTRING")
+
+argo <- read_parquet("data/argo_pq/biocarbon_floats_table.parquet") |> mutate(depth = round(PRES))
+
+new_ref <- select(argo, PLATFORM_NUMBER, JULD) |> unique()
+depth <- tibble("depth" = c(0:200))
+
+new_ref <- new_ref |> crossing(depth)
+
+new_ref <- new_ref |> left_join(argo)
+
+new_ref <- new_ref |> filter(PLATFORM_NUMBER == "4903532 ") |>  group_by(PLATFORM_NUMBER, JULD) %>%  # Interpolate within each profile
+  mutate(across(c(LONGITUDE, LATITUDE, TEMP, PSAL, CHLA_ADJUSTED, BBP700_ADJUSTED, NITRATE_ADJUSTED, DOXY_ADJUSTED), 
+                ~ na.approx(.x, depth, na.rm = FALSE))) %>%
+  mutate(across(c(LONGITUDE, LATITUDE, TEMP, PSAL, CHLA_ADJUSTED, BBP700_ADJUSTED, NITRATE_ADJUSTED, DOXY_ADJUSTED), 
+                ~ na.locf(.x, na.rm = FALSE, fromLast = TRUE))) %>%
+  mutate(across(c(NITRATE_ADJUSTED, DOXY_ADJUSTED), 
+                ~ na.locf(.x, na.rm = FALSE))) %>%
+  ungroup()
+```
+
+```{python}
+import xarray as xr
+import pandas as pd
+import os
+import numpy as np
+import pyarrow.parquet as pq
+import polars as pl
+
+```
+

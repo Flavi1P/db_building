@@ -1,0 +1,243 @@
+
+# Always include this!
+m_present_time
+
+# Tells us if the glider thinks it's at the surface
+m_appear_to_be_at_surface
+
+# Steering parameters
+m_fin
+c_fin
+m_pitch
+c_pitch
+m_roll
+c_roll
+m_heading
+c_heading
+
+# Glider health
+m_coulomb_amphr
+m_coulomb_amphr_total
+m_battery
+#m_battery_inst
+m_vacuum
+
+# Iridium parameters
+m_iridium_call_num
+m_iridium_signal_strength
+m_iridium_redials
+
+# Depth parameters
+m_depth
+m_pressure
+m_altitude
+m_water_depth
+#m_depth_state
+
+# Depth-averaged currents
+m_final_water_vx
+m_final_water_vy
+m_water_vx
+m_water_vy
+
+# GPS sensors
+c_wpt_lat
+c_wpt_lon
+m_gps_lat
+m_gps_lon
+m_lat
+m_lon
+m_gps_status
+m_gps_full_status
+
+# Science sensors
+#sci_software_ver
+sci_ctd41cp_timestamp
+sci_m_present_time
+m_science_clothesline_lag
+#m_science_sent_some_data
+
+# CTD sensors
+sci_water_pressure
+sci_water_cond
+sci_water_temp
+m_water_temp
+m_water_cond
+m_water_pressure
+
+# GliderDOS version
+x_software_ver
+
+# AANDERAA OXYGEN OPTODE 
+# sci_oxy4_sensors (new sensor - most common now, and only one used by MARS - I think!)
+sci_oxy4_oxygen
+sci_oxy4_saturation
+sci_oxy4_temp
+sci_oxy4_calphase
+sci_oxy4_tcphase
+sci_oxy4_c1rph
+sci_oxy4_c2rph
+sci_oxy4_c1amp
+sci_oxy4_c2amp
+sci_oxy4_rawtemp
+sci_oxy4_timestamp
+
+# oxy3835_sensors (older sensors)
+c_oxy3835_on
+sci_oxy3835_is_installed
+c_oxy3835_num_fields_to_send
+sci_oxy3835_oxygen
+sci_oxy3835_saturation
+sci_oxy3835_temp
+c_oxy3835_wphase_on
+sci_oxy3835_wphase_is_installed
+c_oxy3835_wphase_num_fields_to_send
+sci_oxy3835_wphase_oxygen
+sci_oxy3835_wphase_saturation
+sci_oxy3835_wphase_temp
+sci_oxy3835_wphase_dphase
+sci_oxy3835_wphase_bphase
+sci_oxy3835_wphase_rphase
+sci_oxy3835_wphase_bamp
+sci_oxy3835_wphase_bpot
+sci_oxy3835_wphase_ramp
+sci_oxy3835_wphase_rawtemp
+sci_oxy3835_timestamp
+sci_oxy3835_wphase_timestamp
+
+# SATLANTIC PAR SENSOR
+# sci_sat_par_sensors
+sci_satpar_par
+sci_satpar_raw_counts
+sci_satpar_timer
+sci_satpar_timestamp
+
+# ECOPUCKs
+# bb2flsv7_sensors - GOCART sci bays
+sci_bb2flsv7_is_installed
+sci_bb2flsv7_b650_scaled
+sci_bb2flsv7_b532_scaled
+sci_bb2flsv7_chl_scaled
+sci_bb2flsv7_b650_sig
+sci_bb2flsv7_b532_sig
+sci_bb2flsv7_chl_sig
+sci_bb2flsv7_b650_ref
+sci_bb2flsv7_b532_ref
+sci_bb2flsv7_chl_ref
+sci_bb2flsv7_therm
+sci_bb2flsv7_timestamp
+
+# bb2flsv9_sensors - GOCART sci bays
+sci_bb2flsv9_is_installed
+sci_bb2flsv9_b700_scaled
+sci_bb2flsv9_b532_scaled
+sci_bb2flsv9_chl_scaled
+sci_bb2flsv9_b700_sig
+sci_bb2flsv9_b532_sig
+sci_bb2flsv9_chl_sig
+sci_bb2flsv9_b700_ref
+sci_bb2flsv9_b532_ref
+sci_bb2flsv9_chl_ref
+sci_bb2flsv9_therm
+sci_bb2flsv9_timestamp
+
+# flbbcd_sensors
+c_flbbcd_on
+sci_flbbcd_is_installed
+c_flbbcd_num_fields_to_send
+u_flbbcd_is_calibrated
+u_flbbcd_chlor_cwo
+u_flbbcd_bb_cwo
+u_flbbcd_cdom_cwo
+u_flbbcd_chlor_sf
+u_flbbcd_bb_sf
+u_flbbcd_cdom_sf
+sci_flbbcd_chlor_units
+sci_flbbcd_bb_units
+
+# bb2flsv2_sensors
+sci_bb2flsV2_is_installed
+sci_bb2flsV2_b470_scaled
+sci_bb2flsV2_b532_scaled
+sci_bb2flsV2_chl_scaled
+sci_bb2flsV2_b470_sig
+sci_bb2flsV2_b532_sig
+sci_bb2flsV2_chl_sig
+sci_bb2flsV2_b470_ref
+sci_bb2flsV2_b532_ref
+sci_bb2flsV2_chl_ref
+sci_bb2flsV2_therm
+sci_bb2flsV2_timestamp
+
+# bb2flsv2_sensors
+sci_bb2flsv2_is_installed
+sci_bb2flsv2_b470_scaled
+sci_bb2flsv2_b532_scaled
+sci_bb2flsv2_chl_scaled
+sci_bb2flsv2_b470_sig
+sci_bb2flsv2_b532_sig
+sci_bb2flsv2_chl_sig
+sci_bb2flsv2_b470_ref
+sci_bb2flsv2_b532_ref
+sci_bb2flsv2_chl_ref
+sci_bb2flsv2_therm
+sci_bb2flsv2_timestamp
+
+# bb3slo_sensors
+c_bb3slo_on
+c_bb3slo_num_fields_to_send
+sci_bb3slo_is_installed
+sci_bb3slo_b470_scaled
+sci_bb3slo_b532_scaled
+sci_bb3slo_b660_scaled
+sci_bb3slo_b470_sig
+sci_bb3slo_b532_sig
+sci_bb3slo_b660_sig
+sci_bb3slo_b470_ref
+sci_bb3slo_b532_ref
+sci_bb3slo_b660_ref
+sci_bb3slo_temp
+sci_bb3slo_timestamp
+
+# bbfl2s_sensors
+sci_bbfl2s_is_installed
+sci_bbfl2s_bb_sig
+sci_bbfl2s_chlor_sig
+sci_bbfl2s_cdom_sig
+sci_bbfl2s_bb_ref
+sci_bbfl2s_chlor_ref
+sci_bbfl2s_cdom_ref
+sci_bbfl2s_temp
+sci_bbfl2s_bb_scaled
+sci_bbfl2s_chlor_scaled
+sci_bbfl2s_cdom_scaled
+sci_bbfl2s_timestamp
+
+# fl3slo_sensors
+c_fl3slo_on
+c_fl3slo_num_fields_to_send
+sci_fl3slo_is_installed
+sci_fl3slo_chlor_units
+sci_fl3slo_phyco_units
+sci_fl3slo_cdom_units
+sci_fl3slo_chlor_sig
+sci_fl3slo_phyco_sig
+sci_fl3slo_cdom_sig
+sci_fl3slo_chlor_ref
+sci_fl3slo_phyco_ref
+sci_fl3slo_cdom_ref
+sci_fl3slo_temp
+sci_fl3slo_timestamp
+     
+
+
+
+
+
+m_present_time_fixed
+m_present_time_sci
+u_max_clothesline_lag_for_consci
+m_de_oil_vol
+sci_flbbcd_cdom_units
+sci_flbbcd_therm
+sci_flbbcd_timestamp
