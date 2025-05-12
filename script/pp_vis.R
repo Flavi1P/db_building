@@ -100,7 +100,7 @@ ggsave("output/plots/pp_floats/floats_map_date_rectangle.png", dpi = 300, width 
 #         end_pause = 60, res = 100)
 # anim_save("floats_icb_2024__60s.gif")
 
-p
+#p
 
 db <- db |> 
   group_by(prof_index) |> 
@@ -137,7 +137,7 @@ ggplot(db_icb)+
   ylab("Pres")+
   theme_bw()
 
-ggsave("output/plots/pp_floats/chla_from_floats.png", dpi = 300, width = 20, height = 15, units = "cm")
+#ggsave("output/plots/pp_floats/chla_from_floats.png", dpi = 300, width = 20, height = 15, units = "cm")
 
 ggplot(filter(db_icb, carbon_smoothed < 150))+
   geom_path(aes(x = carbon_smoothed, y = -pres_rounded, group = prof_index))+
@@ -146,7 +146,7 @@ ggplot(filter(db_icb, carbon_smoothed < 150))+
   ylab("Pres")+
   theme_bw()
 
-ggsave("output/plots/pp_floats/carbon_from_floats.png", dpi = 300, width = 20, height = 15, units = "cm")
+#ggsave("output/plots/pp_floats/carbon_from_floats.png", dpi = 300, width = 20, height = 15, units = "cm")
 
 ggplot(filter(db_icb, carbon_smoothed < 150))+
   geom_path(aes(x = carbon_smoothed, y = -pres_rounded, group = prof_index))+
@@ -166,7 +166,7 @@ ggplot(filter(db_icb, pres_rounded < 50))+
   xlab("Date")+
   scale_color_viridis_c(nam = "Depth")+
   theme_bw()
-ggsave("output/plots/pp_floats/NPP_from_floats.png", dpi = 300, width = 20, height = 15, units = "cm")
+#ggsave("output/plots/pp_floats/NPP_from_floats.png", dpi = 300, width = 20, height = 15, units = "cm")
 
 ggplot(filter(db_icb, pres_rounded < 50))+
   geom_path(aes(x = juld, y = mu, color = pres_rounded, group = pres_rounded))+
@@ -175,7 +175,7 @@ ggplot(filter(db_icb, pres_rounded < 50))+
   xlab("Date")+
   scale_color_viridis_c(nam = "Depth")+
   theme_bw()
-ggsave("output/plots/pp_floats/mu_from_floats.png", dpi = 300, width = 20, height = 15, units = "cm")
+#ggsave("output/plots/pp_floats/mu_from_floats.png", dpi = 300, width = 20, height = 15, units = "cm")
 
 
 db_icb = db_icb |> mutate(unique_ind = paste(platform_number, pres_rounded))
@@ -185,7 +185,7 @@ ggplot(filter(db_icb, pres_rounded < 50))+
   xlab("Date")+
   scale_color_viridis_c(nam = "Depth")+
   theme_bw()
-ggsave("output/plots/pp_floats/NPP_from_all_floats.png", dpi = 300, width = 20, height = 15, units = "cm")
+#ggsave("output/plots/pp_floats/NPP_from_all_floats.png", dpi = 300, width = 20, height = 15, units = "cm")
 
 
 
@@ -195,7 +195,7 @@ ggplot(db_icb)+
   xlab("NPP (mg C m-3 d-1)")+
   ylab("Date")+
   theme_bw()
-ggsave("output/plots/pp_floats/NPP_profiles_from_floats.png", dpi = 300, width = 20, height = 15, units = "cm")
+#ggsave("output/plots/pp_floats/NPP_profiles_from_floats.png", dpi = 300, width = 20, height = 15, units = "cm")
 
 ggplot(db_icb)+
   geom_path(aes(x = mu, y = -pres_rounded, group = prof_index))+
@@ -203,7 +203,7 @@ ggplot(db_icb)+
   xlab("mu (d-1)")+
   ylab("Date")+
   theme_bw()
-ggsave("output/plots/pp_floats/mu_profiles_from_floats.png", dpi = 300, width = 20, height = 15, units = "cm")
+#ggsave("output/plots/pp_floats/mu_profiles_from_floats.png", dpi = 300, width = 20, height = 15, units = "cm")
 
 
 tet = db |> filter(platform_number == 4903532)
@@ -262,7 +262,7 @@ ggplot(season_avg)+
   theme_bw()+
   xlab("NPP (mg C m-3 d-1)")+
   ylab("Depth (m)")
-ggsave("output/plots/pp_floats/NPP_ season_profiles_from_floats.png", dpi = 300, width = 20, height = 15, units = "cm")
+#ggsave("output/plots/pp_floats/NPP_ season_profiles_from_floats.png", dpi = 300, width = 20, height = 15, units = "cm")
 
 
 ggplot(season_avg)+
@@ -275,7 +275,7 @@ ggplot(season_avg)+
   xlab("mu (d-1)")+
   ylab("Depth (m)")
 
-ggsave("output/plots/pp_floats/mu_season_profiles_from_floats.png", dpi = 300, width = 20, height = 15, units = "cm")
+#ggsave("output/plots/pp_floats/mu_season_profiles_from_floats.png", dpi = 300, width = 20, height = 15, units = "cm")
 
 
 ggplot(db)+
@@ -355,24 +355,24 @@ db_icb <- db_icb %>%
 grid <- grid %>%
   mutate(date_numeric = as.numeric(juld))
 
-# Use the `interp` function from the akima package for 2D interpolation
-interp_result <- with(db_icb, 
-                      akima::interp(
-                        x = date_numeric,
-                        y = pres_rounded,
-                        z = pp,
-                        xo = grid$date_numeric,
-                        yo = grid$pres_rounded,
-                        duplicate = "mean"
-                      )
-)
-
-# Convert the result back into a tidy data frame
-interpolated_data <- as_tibble(expand.grid(
-  date = interp_result$x,
-  pres_rounded = interp_result$y
-)) %>%
-  mutate(pp = c(interp_result$z))  # Flatten the interpolated matrix
+# # Use the `interp` function from the akima package for 2D interpolation
+# interp_result <- with(db_icb, 
+#                       akima::interp(
+#                         x = date_numeric,
+#                         y = pres_rounded,
+#                         z = pp,
+#                         xo = grid$date_numeric,
+#                         yo = grid$pres_rounded,
+#                         duplicate = "mean"
+#                       )
+# )
+# 
+# # Convert the result back into a tidy data frame
+# interpolated_data <- as_tibble(expand.grid(
+#   date = interp_result$x,
+#   pres_rounded = interp_result$y
+# )) %>%
+#   mutate(pp = c(interp_result$z))  # Flatten the interpolated matrix
 
 db_icb <- db_icb |> mutate(zeu_mld = MLD-zeu)
 
@@ -391,7 +391,7 @@ ggplot(db_icb)+
     title = "Chlorophyll-a Stock vs Date"
   )
 
-ggsave("output/plots/pp_floats/chla_stock_ts.png", dpi = 300, width = 20, height = 15, units = "cm")
+#ggsave("output/plots/pp_floats/chla_stock_ts.png", dpi = 300, width = 20, height = 15, units = "cm")
 
 
 ggplot(filter(db_icb, pp_stock < 2500))+
@@ -408,7 +408,7 @@ ggplot(filter(db_icb, pp_stock < 2500))+
     color = "Float WMO"
   )
 
-ggsave("output/plots/pp_floats/npp_integrated_ts.png", dpi = 300, width = 20, height = 15, units = "cm")
+#ggsave("output/plots/pp_floats/npp_integrated_ts.png", dpi = 300, width = 20, height = 15, units = "cm")
 
 t <- filter(db_icb, pp_stock < 2500)
 ggplot(db_icb)+

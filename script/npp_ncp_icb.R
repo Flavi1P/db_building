@@ -12,7 +12,7 @@ bathymetry <- st_read("C:/Users/flapet/OneDrive - NOC/Documents/NRT_viz/biocarbo
 bathymetry_2000 <- st_read("C:/Users/flapet/OneDrive - NOC/Documents/NRT_viz/biocarbon_nrt_data_viz/Data/ne_10m_bathymetry_all/ne_10m_bathymetry_I_2000.shp") |> 
   st_cast("MULTILINESTRING")
 
-argo <- read_parquet("data/argo_pq/biocarbon_nitrate_floats_table.parquet") |> mutate(depth = round(PRES))
+#argo <- read_parquet("data/argo_pq/biocarbon_nitrate_floats_table.parquet") |> mutate(depth = round(PRES))
 argo2 <- read_parquet("data/argo_pq/icb_floats_table.parquet") |> mutate(depth = round(PRES))
 
 argo2 <- argo2 |> filter(PRES < 202 & LATITUDE > 55)
@@ -166,7 +166,9 @@ interp_data <- interp_data |> left_join(dates_df) |> select(-TIME)
 
 #write_parquet(interp_data, "data/argo_pq/float_icb_fluorescence_cleaned.parquet")
 
-npp_est <- vroom::vroom('data/argo_icb_pp_estimations_floats.csv')
+#npp_est <- vroom::vroom('data/argo_icb_pp_estimations_floats.csv')
+npp_est <- vroom::vroom('data/argo_pp_north_atlantic_estimations_floats.csv')
+
 
 table(is.na(npp_est$pp))
 
@@ -179,7 +181,8 @@ plt_df <- npp_est |>
          doy = lubridate::yday(JULD)) |> 
   group_by(prof_id, mth, JULD, year, doy) |> 
   summarise(integrated_pp = sum(pp),
-            integrated_nitrate = sum(NITRATE_ADJUSTED)) |> 
+            integrated_nitrate = sum(NITRATE_ADJUSTED),
+            vgpm = mean(npp_vgpm)) |> 
   ungroup() |> 
   select(-prof_id) |> 
   group_by(doy, year) |> 
@@ -188,6 +191,9 @@ plt_df <- npp_est |>
   arrange(JULD) |> 
   filter(!is.na(integrated_pp))
 
+ggplot(plt_df)+
+  geom_path(aes(x = doy, y = integrated_pp, color = as.factor(year), group = as.factor(year)))+
+  scale_color_brewer(palette = 'Paired', name = "Year")
 ggplot(plt_df)+
   geom_path(aes(x = doy, y = integrated_pp, color = as.factor(year), group = as.factor(year)))+
   scale_color_brewer(palette = 'Paired', name = "Year")

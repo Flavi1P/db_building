@@ -5,7 +5,7 @@ library(patchwork)
 library(sf)
 library(castr)
 library(gsw)
-
+library(broom)
 bathymetry <- st_read("C:/Users/flapet/OneDrive - NOC/Documents/NRT_viz/biocarbon_nrt_data_viz/Data/ne_10m_bathymetry_all/ne_10m_bathymetry_J_1000.shp") |> 
   st_cast("MULTILINESTRING")
 
@@ -23,8 +23,8 @@ new_ref <- new_ref |> crossing(depth) |> left_join(argo)
 
 new_ref <- new_ref |> mutate(JULD_date = lubridate::date(JULD),
                              prof_id = paste0(PLATFORM_NUMBER, JULD_date)) |>
-  filter(JULD_date > lubridate::date("2023-12-31")) |> 
-  filter(!prof_id %in% c("4903659 2024-06-29", "4903659 2024-06-23")) |> group_by(prof_id) %>%  # Interpolate within each profile
+  filter(JULD_date > lubridate::date("2023-12-31")) |>
+  filter(!prof_id %in% c("4903659 2024-06-29", "4903659 2024-06-23", "6904185 2024-01-12", "1902304 2024-01-19")) |> group_by(prof_id) %>%  # Interpolate within each profile
   mutate(across(c(LONGITUDE, LATITUDE, TEMP, PSAL, CHLA_ADJUSTED, BBP700_ADJUSTED, NITRATE_ADJUSTED, DOXY_ADJUSTED), 
                 ~ na.approx(.x, depth, na.rm = FALSE))) %>%
   mutate(across(c(LONGITUDE, LATITUDE, TEMP, PSAL, CHLA_ADJUSTED, BBP700_ADJUSTED, NITRATE_ADJUSTED, DOXY_ADJUSTED), 
@@ -34,44 +34,131 @@ new_ref <- new_ref |> mutate(JULD_date = lubridate::date(JULD),
   ungroup()
 
 
-write_parquet(new_ref, "data/argo_pq/float_cleaned.parquet")
+#write_parquet(new_ref, "data/argo_pq/float_cleaned.parquet")
 
-npp_df <- read_csv("data/argo_pp_estimations_float4903532.csv") |> 
+test <- read_parquet("data/argo_pq/float_cleaned.parquet")
+
+kd490 <- filter(test, !is.na(DOWN_IRRADIANCE490))
+
+chl_kd <- kd490 %>% group_by(prof_id) %>%
+  filter(PRES < 40 & PRES > 10) |>
+  mutate(DOWN_IRRADIANCE490 = case_when(DOWN_IRRADIANCE490 < 0 ~ 4e-09,
+                                        TRUE ~ DOWN_IRRADIANCE490),
+         lm_dwn490 = log(DOWN_IRRADIANCE490)) |> 
+  do(model = lm(lm_dwn490 ~ PRES, data = .)) %>% ungroup() %>% 
+  transmute(prof_id, coef = map(model, tidy)) %>% 
+  unnest(coef) %>% 
+  filter(term == "PRES") 
+
+chl_kd <- chl_kd |> 
+  mutate(chl_estimate = ((-estimate - 0.0166) / (0.0773))^(1/0.6715))
+
+chl_mean <- kd490 %>% group_by(prof_id) %>%
+  filter(PRES < 40 & PRES > 10) |> select(prof_id, CHLA_ADJUSTED) |> 
+  summarise_all(mean, na.rm = TRUE) |> 
+  rename("mean_chla" = CHLA_ADJUSTED)
+
+kd490_df <- kd490 |> left_join(select(chl_kd, prof_id, chl_estimate)) |> left_join(chl_mean)
+
+plot_kd <- kd490_df |> 
+  select(JULD, chl_estimate, mean_chla, LONGITUDE, LATITUDE, PLATFORM_NUMBER) |> 
+  unique() |> 
+  mutate(f_chl = (mean_chla *2)/ chl_estimate)
+
+ggplot(plot_kd)+
+  geom_point(aes(x = JULD, y = chl_estimate, color = "Kd490"))+
+  geom_point(aes(x = JULD, y = mean_chla *2, color = "Fluorescence"))+
+  ylim(0, 2.5)+
+  scale_color_brewer(palette = "Set1", name = "Chl estimate")+
+  ylab("Chl")+
+  xlab("Date")+
+  theme_bw()
+
+ggsave("output/plots/pp_floats/chla_estimates_comparison.png", dpi = 300, width = 20, height = 15, units = "cm")
+
+
+ggplot(plot_kd)+
+  geom_point(aes(x = JULD, y = f_chl))+
+  geom_smooth(aes(x = JULD, y = f_chl), method = "lm", se = FALSE)+
+  ylim(0, 3)+
+  ylab("Fluo/Chl")+
+  xlab("Date")+
+  theme_bw()
+ggsave("output/plots/pp_floats/f_chl_timeseries.png", dpi = 300, width = 20, height = 15, units = "cm")
+
+
+ggplot(plot_kd)+
+  geom_point(aes(x = LONGITUDE, y = LATITUDE, color = PLATFORM_NUMBER))+
+  geom_sf(data = bathymetry, color = "Black", linetype = "dashed")+
+  geom_sf(data = bathymetry_2000, color = "Grey", linetype = "dashed")+
+  borders("world", colour = "black", fill = "gray80") +  
+  xlab('Longitude')+
+  ylab('Latitude')+
+  coord_sf(xlim = c(-32, -12), ylim = c(57, 64))+
+  theme_minimal()+
+  ggtitle("KD490 dataset")
+
+ggsave("output/plots/pp_floats/kd490_dataset.png", dpi = 300, width = 20, height = 15, units = "cm")
+
+kd_profile <- filter(kd490, prof_id == "4903659 2024-07-24")
+
+ggplot(kd_profile)+
+  geom_point(aes(x = DOWN_IRRADIANCE490, y = -PRES))+
+  geom_hline((aes(yintercept = -40)))+
+  geom_hline((aes(yintercept = -10)))+
+  ylim(-100, 0)
+ggsave("output/plots/pp_floats/kd490_profile.png", dpi = 300, width = 20, height = 15, units = "cm")
+
+ggplot(kd_profile)+
+  geom_point(aes(x = CHLA_ADJUSTED, y = -PRES))+
+  geom_hline((aes(yintercept = -40)))+
+  geom_hline((aes(yintercept = -10)))+
+  ylim(-100, 0)
+
+ggplot(filter(kd_profile, PRES < 40 & PRES > 10))+
+  geom_point(aes(x = PRES, y = log(DOWN_IRRADIANCE490)))
+ggsave("output/plots/pp_floats/kd490_regression.png", dpi = 300, width = 20, height = 15, units = "cm")
+
+
+npp_df <- read_csv("data/argo_pp_estimations_floats.csv") |> 
   mutate(ct = gsw_CT_from_t(PSAL, TEMP, depth),
-         sigma0 = gsw_sigma0(PSAL, TEMP))
+         sigma0 = gsw_sigma0(PSAL, TEMP)) |> 
+  filter(PLATFORM_NUMBER == "1902304" | PLATFORM_NUMBER == "4903532")
 
 
 prof_dat <- npp_df |> 
   group_by(PLATFORM_NUMBER, JULD) |> 
   mutate(nitrate_smoothed = smooth(NITRATE_ADJUSTED, k = 5, n = 2)) |> 
   summarise(MLD = mld(sigma0, depth, ref.depths=0:5, criteria = 0.03, default.depth=200),
-            nitracline = clined(nitrate_smoothed, depth))
+            nitracline = clined(nitrate_smoothed, depth),
+            chl_cline = clined(CHLA_ADJUSTED, depth))
 
 npp_df <- left_join(npp_df, prof_dat)
 
 ggplot(npp_df)+
-  geom_tile(aes(y = -depth, x = JULD, fill = CHLA_ADJUSTED))+
-  geom_line(aes(x = JULD, y = - MLD), colour = "white")+
-  scale_fill_viridis_c()
+  geom_tile(aes(y = -depth, x = JULD, fill = NITRATE_ADJUSTED))+
+  geom_line(aes(x = JULD, y = - chl_cline))+
+  scale_fill_viridis_c()+
+  ylim(-100, 0)+
+  facet_wrap(.~PLATFORM_NUMBER)
 
-ggsave("output/plots/pp_floats/chla_transect_4903532.png", dpi = 300, width = 20, height = 15, units = "cm")
+#ggsave("output/plots/pp_floats/chla_transect_4903532.png", dpi = 300, width = 20, height = 15, units = "cm")
 
 ggplot(npp_df)+
   geom_tile(aes(y = -depth, x = JULD, fill = pp))+
   geom_line(aes(x = JULD, y = - MLD), colour = "white")+
   scale_fill_viridis_c(name = "NPP (mg C m-3)")
 
-ggsave("output/plots/pp_floats/npp_transect_4903532.png", dpi = 300, width = 20, height = 15, units = "cm")
+#ggsave("output/plots/pp_floats/npp_transect_4903532.png", dpi = 300, width = 20, height = 15, units = "cm")
 
 
 ggplot(npp_df)+
   geom_tile(aes(y = -depth, x = JULD, fill = NITRATE_ADJUSTED))+
-  geom_line(aes(x = JULD, y = - MLD), colour = "white")+
   scale_fill_viridis_c(name = "Nitrate (micromol kg-1)")
 
-ggsave("output/plots/pp_floats/nitrate_transect_4903532.png", dpi = 300, width = 20, height = 15, units = "cm")
+#ggsave("output/plots/pp_floats/nitrate_transect_4903532.png", dpi = 300, width = 20, height = 15, units = "cm")
 
-location <- select(argo2, TIME, LONGITUDE, LATITUDE) |> unique()
+location <- select(npp_df, JULD, LONGITUDE, LATITUDE) |> unique()
 
 integrated_df <- npp_df |> select(PLATFORM_NUMBER, JULD, pp, NITRATE_ADJUSTED) |>
   group_by(PLATFORM_NUMBER, JULD) |> 
@@ -79,22 +166,36 @@ integrated_df <- npp_df |> select(PLATFORM_NUMBER, JULD, pp, NITRATE_ADJUSTED) |
   ungroup() |> 
   left_join(prof_dat) |> 
   left_join(location) |> 
+  group_by(PLATFORM_NUMBER) |> 
   mutate(nitrate_smoothed = smooth.spline(JULD, NITRATE_ADJUSTED, spar = 0.6)$y)
   
 
 integrated_df$date <- lubridate::date(integrated_df$JULD)
 
 ggplot(integrated_df)+
-  geom_point(aes(x = date, y = NITRATE_ADJUSTED))+
-  geom_path(aes(x = date, y = nitrate_smoothed))
+  geom_point(aes(x = date, y = NITRATE_ADJUSTED, color = as.factor(PLATFORM_NUMBER)))+
+  geom_path(aes(x = date, y = nitrate_smoothed, color = as.factor(PLATFORM_NUMBER)))+
+  scale_color_brewer(palette = "Set1", name = "wmo")
 
-ggsave("output/plots/pp_floats/nitrate_ts.png", dpi = 300, width = 20, height = 15, units = "cm")
+#ggsave("output/plots/pp_floats/nitrate_ts.png", dpi = 300, width = 20, height = 15, units = "cm")
 
 
 
 ggplot(integrated_df)+
   geom_point(aes(x = date, y = -nitracline))
 
+ggplot(integrated_df)+
+  geom_point(aes(x = LONGITUDE, y = LATITUDE, colour = as.factor(PLATFORM_NUMBER)))+
+  geom_sf(data = bathymetry, color = "Black", linetype = "dashed")+
+  geom_sf(data = bathymetry_2000, color = "Grey", linetype = "dashed")+
+  borders("world", colour = "black", fill = "gray80") +  
+  xlab('Longitude')+
+  ylab('Latitude')+
+  scale_color_brewer(name = "WMO", palette = "Set1")+
+  coord_sf(xlim = c(-32, -12), ylim = c(57, 64))+
+  theme_minimal()
+
+ggsave("output/plots/pp_floats/comparison_map.png", dpi = 300, width = 20, height = 15, units = "cm")
 
 ggplot(integrated_df)+
   geom_point(aes(x = LONGITUDE, y = LATITUDE, colour = pp/12))+
@@ -107,7 +208,7 @@ ggplot(integrated_df)+
   coord_sf(xlim = c(-32, -12), ylim = c(57, 64))+
   theme_minimal()
 
-ggsave("output/plots/pp_floats/npp4903532_map.png", dpi = 300, width = 20, height = 15, units = "cm")
+#ggsave("output/plots/pp_floats/npp4903532_map.png", dpi = 300, width = 20, height = 15, units = "cm")
 
 integrated_df$nitrate_dd <- c(NA, diff(integrated_df$nitrate_smoothed))
 integrated_df$diff_date <- c(NA, diff(integrated_df$date))
@@ -115,24 +216,38 @@ integrated_df$diff_date <- c(NA, diff(integrated_df$date))
 integrated_df <- integrated_df |> mutate(dd_smoothed = rollmean(nitrate_dd, k = 3, fill = "extend"))
 
 ggplot(integrated_df)+
-  geom_point(aes(x = date, y = dd_smoothed))
+  geom_point(aes(x = date, y = dd_smoothed, color = as.factor(PLATFORM_NUMBER)))
 
-integrated_df <- integrated_df |> mutate(ncp = -(dd_smoothed*6.6),
-                                         pp = pp/10,
-                                         budget = pp - ncp)
+integrated_df <- integrated_df |>
+  group_by(PLATFORM_NUMBER) |> 
+  mutate(ncp = -(dd_smoothed*6.6),
+                                         pp = pp/diff_date,
+                                         budget = pp - ncp) |> 
+  mutate(pp = na.approx(pp, na.rm = FALSE))
 
-
-ggplot(integrated_df)+
-  geom_path(aes(x = date, y = pp))+
-  ylab("Integrated NPP")
-
-ggsave("output/plots/pp_floats/npp4903532_line.png", dpi = 300, width = 20, height = 15, units = "cm")
 
 ggplot(integrated_df)+
-  geom_path(aes(x = date, y = ncp))+
-  ylab("Integrated NCP")
+  geom_line(aes(x = date, y = pp, color = as.factor(PLATFORM_NUMBER)))+
+  ylab("Integrated NPP")+
+  scale_color_brewer(palette = "Set1", name = "WMO")
 
-ggsave("output/plots/pp_floats/ncp4903532_line.png", dpi = 300, width = 20, height = 15, units = "cm")
+#ggsave("output/plots/pp_floats/nppcomparison_line.png", dpi = 300, width = 20, height = 15, units = "cm")
+
+ggplot(integrated_df)+
+  geom_line(aes(x = date, y = ncp, color = as.factor(PLATFORM_NUMBER)))+
+  ylab("Integrated NPP")+
+  scale_color_brewer(palette = "Set1", name = "WMO")
+
+#ggsave("output/plots/pp_floats/ncp_only_comparison_line.png", dpi = 300, width = 20, height = 15, units = "cm")
+
+ggplot(integrated_df)+
+  geom_path(aes(x = date, y = ncp, color = as.factor(PLATFORM_NUMBER)))+
+  geom_path(aes(x = date, y = pp, color = as.factor(PLATFORM_NUMBER)), linetype = "dashed")+
+  ylab("Integrated NCP")+
+  scale_color_brewer(palette = "Set1", name = "WMO")
+ggsave("output/plots/pp_floats/ncpcomparison_line.png", dpi = 300, width = 20, height = 15, units = "cm")
+
+#ggsave("output/plots/pp_floats/ncp4903532_line.png", dpi = 300, width = 20, height = 15, units = "cm")
 
 integrated_df <- integrated_df |> mutate(budget = pp - ncp,
                                          period = case_when(date > lubridate::date("2024-01-01") & date < lubridate::date("2024-04-20") ~ "Pre bloom",
@@ -171,12 +286,21 @@ p2 <- ggplot(integrated_df)+
   
 p1/p2  +  plot_layout(height = c(2, 1))
 
-ggsave("output/plots/pp_floats/npp_vs_ncp.png", dpi = 300, width = 20, height = 15, units = "cm")
+plot_int <- integrated_df |> na.omit()
+ggplot(integrated_df)+
+  geom_line(aes(x = date, y = pp * 12, colour = "NPP"))+
+  geom_path(aes(x = date, y = ncp, colour = "NCP"))+
+  theme_bw()+
+  scale_color_brewer(palette = "Set1")+
+  ylab("Integrated productivity (mmol C m-2 d-1)")+
+  ylim(0, 350)
+#ggsave("output/plots/pp_floats/npp_vs_ncp.png", dpi = 300, width = 20, height = 15, units = "cm")
 
+#ggsave("output/plots/pp_floats/positive_npp_vs_ncp.png", dpi = 300, width = 20, height = 15, units = "cm")
 
 ggplot(integrated_df)+
   geom_path(aes(x = pp, y = ncp, color = date), linewidth = 2)+
   scale_color_viridis_c()
 
-ggsave("output/plots/pp_floats/npp_vs_ncp_ts.png", dpi = 300, width = 20, height = 15, units = "cm")
+#ggsave("output/plots/pp_floats/npp_vs_ncp_ts.png", dpi = 300, width = 20, height = 15, units = "cm")
 
