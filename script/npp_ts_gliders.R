@@ -57,7 +57,7 @@ ggplot(daily_zeu)+
 
 
 datetime_par <- dat |> select(date, hour, par_insitu, par, depth) |>
-  filter(depth == 0 & par_insitu > 0) |> 
+  filter(depth == 0 & par_insitu >= 0) |> 
   group_by(date, hour) |> 
   summarise_all(mean, na.rm = TRUE) |> 
   ungroup()
@@ -67,24 +67,32 @@ all_datetime_par <- datetime_par |>
   left_join(datetime_par) |> 
   mutate(datetime = lubridate::as_datetime(paste(date, hour, sep = " "), format = "%Y-%m-%d %H"))
 
+cs <- read_csv("data/PAR_and_time.csv")
+
+par_lj <- left_join(all_datetime_par, cs, by = c("datetime" = "Time"))
+
+
 day1 <- lubridate::as_datetime("2024-06-15 01", format = "%Y-%m-%d %H")
 day2 <- lubridate::as_datetime("2024-06-19 00", format = "%Y-%m-%d %H")
-one_week <- all_datetime_par |> filter(datetime > day1 & datetime < day2)
+one_week <- par_lj |> filter(datetime > day1 & datetime < day2)
 
-ggplot_na_distribution(one_week$par_insitu)
+ggplot_na_distribution(one_week$PAR)
 ggsave("output/plots/pp_floats/par_ts_filled.png", dpi = 300, width = 16, height = 9, units = "cm")
 
-imp <- na_interpolation(all_datetime_par$par_insitu, option = "spline")
+imp <- na_interpolation(par_lj$par_insitu, option = "spline")
+
+imp <- imp |> mutate(par_corrected = case_when(PAR == 0 ~ 0,
+                                    PAR > 0 ~par_insitu))
 ggplot_na_imputations(all_datetime_par$par_insitu, imp)
 
-all_datetime_par <- all_datetime_par |> 
+par_lj <- par_lj |> 
   mutate(par_insitu = imp,
          par_insitu = case_when(par_insitu < 0 ~ 0,
                                 TRUE ~ par_insitu),
-         par_insitu = case_when(hour < 6 | hour > 20 ~ 0,
+         par_insitu = case_when(PAR == 0 ~ 0,
                                 TRUE ~ par_insitu))
 
-daily_par <- all_datetime_par |> 
+daily_par <- par_lj |> 
   select(datetime, par_insitu) |>
   mutate(date = date(datetime)) |> 
   select(-datetime) |> 
@@ -115,8 +123,8 @@ daily_par <- left_join(daily_par, daily_modis) |>
 ggplot(daily_par)+
   geom_point(aes(x = date, y = par_normalized), color = "steelblue")+
   geom_path(aes(x = date, y = par_normalized), color = "steelblue1")+
-  geom_point(aes(x = date, y = modis_normalized), color = "darksalmon")+
-  geom_path(aes(x = date, y = modis_normalized), color = "darksalmon")+
+  #geom_point(aes(x = date, y = modis_normalized), color = "darksalmon")+
+  #geom_path(aes(x = date, y = modis_normalized), color = "darksalmon")+
   theme_bw()
 
 

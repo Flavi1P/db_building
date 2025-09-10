@@ -1,0 +1,1832 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.7.31">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Open Gliders files</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script><script src="gliders_comparison_files/libs/clipboard/clipboard.min.js"></script>
+<script src="gliders_comparison_files/libs/quarto-html/quarto.js" type="module"></script>
+<script src="gliders_comparison_files/libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="gliders_comparison_files/libs/quarto-html/popper.min.js"></script>
+<script src="gliders_comparison_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="gliders_comparison_files/libs/quarto-html/anchor.min.js"></script>
+<link href="gliders_comparison_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="gliders_comparison_files/libs/quarto-html/quarto-syntax-highlighting-e1a5c8363afafaef2c763b6775fbf3ca.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="gliders_comparison_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="gliders_comparison_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="gliders_comparison_files/libs/bootstrap/bootstrap-bb462d781dde1847d9e3ccf7736099dd.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.min.js" integrity="sha512-c3Nl8+7g4LMSTdrm621y7kf9v3SDPnhxLNhcjFJbKECVnmZHTdo+IRO05sNLTH/D3vA6u1X32ehoLC7WFVdheg==" crossorigin="anonymous"></script>
+
+<script type="application/javascript">define('jquery', [],function() {return window.jQuery;})</script>
+
+
+</head>
+
+<body class="fullcontent quarto-light">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Open Gliders files</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div id="e8f33cca" class="cell" data-execution_count="1">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> xarray <span class="im">as</span> xr</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> glob</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> re</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> datetime <span class="im">import</span> datetime</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> geopy.distance <span class="im">import</span> geodesic</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="3c2f128a" class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Get list of NetCDF files</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>nc_files <span class="op">=</span> glob.glob(<span class="st">"C:/Users/flapet/OneDrive - NOC/Documents/IDAPro/lib/db_building/data/glider/nc_profiled/*.nc"</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Read and concatenate datasets</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> <span class="bu">file</span> <span class="kw">in</span> nc_files:</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    ds <span class="op">=</span> xr.open_dataset(<span class="bu">file</span>, decode_times<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    glider_name <span class="op">=</span> ds.attrs.get(<span class="st">"trajectory"</span>).split(<span class="st">"_"</span>)[<span class="dv">0</span>]</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Select variables of interest</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    vars_of_interest <span class="op">=</span> [<span class="st">"TIME"</span>, <span class="st">"DEPTH"</span>, <span class="st">"TEMP"</span>, <span class="st">"CHLA"</span>, <span class="st">"BBP700"</span>, <span class="st">"ABS_SALINITY"</span>, <span class="st">"MOLAR_DOXY"</span>, <span class="st">"PROFILE_NUMBER"</span>, <span class="st">"LATITUDE"</span>, <span class="st">"LONGITUDE"</span>]</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    ds_sel <span class="op">=</span> ds[vars_of_interest]</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Convert to pandas DataFrame, then to polars DataFrame</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    df_pd <span class="op">=</span> ds_sel.to_dataframe().reset_index()</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    df_pl <span class="op">=</span> pl.from_pandas(df_pd)</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="co">#Use only profiling data (-1 is surfacing behavior)</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    df_pl <span class="op">=</span> df_pl.<span class="bu">filter</span>(pl.col(<span class="st">"PROFILE_NUMBER"</span>) <span class="op">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    df_pl <span class="op">=</span> df_pl.with_columns((pl.col(<span class="st">"PROFILE_NUMBER"</span>).cast(pl.String) <span class="op">+</span> <span class="st">"_"</span> <span class="op">+</span> glider_name).alias(<span class="st">"profile_id"</span>))</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="sc">{</span><span class="bu">file</span><span class="sc">}</span><span class="ss"> processed, shape: </span><span class="sc">{</span>df_pl<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Concatenate DataFrames</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="st">'df_concat'</span> <span class="kw">in</span> <span class="bu">locals</span>():</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>        df_concat <span class="op">=</span> pl.concat([df_concat, df_pl])</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>        df_concat <span class="op">=</span> df_pl</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="co"># Add a 'glider_name' column by extracting the part before '_' in 'profile_id'</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>df_concat <span class="op">=</span> df_concat.with_columns(</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    pl.col(<span class="st">"profile_id"</span>).<span class="bu">str</span>.split(<span class="st">"_"</span>).<span class="bu">list</span>.get(<span class="dv">1</span>).alias(<span class="st">"glider_name"</span>)</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>C:/Users/flapet/OneDrive - NOC/Documents/IDAPro/lib/db_building/data/glider/nc_profiled\Cabot_645_Profiled.nc processed, shape: (1438541, 12)
+C:/Users/flapet/OneDrive - NOC/Documents/IDAPro/lib/db_building/data/glider/nc_profiled\Churchill_647_Profiled.nc processed, shape: (1142019, 12)
+C:/Users/flapet/OneDrive - NOC/Documents/IDAPro/lib/db_building/data/glider/nc_profiled\Doombar_648_Profiled.nc processed, shape: (1952630, 12)
+C:/Users/flapet/OneDrive - NOC/Documents/IDAPro/lib/db_building/data/glider/nc_profiled\Nelson_646_Profiled.nc processed, shape: (1951435, 12)</code></pre>
+</div>
+</div>
+<section id="open-ctd-files" class="level3">
+<h3 class="anchored" data-anchor-id="open-ctd-files">Open CTD files</h3>
+<div id="b724050c" class="cell" data-execution_count="4">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> read_ctd(filepath):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Read column names from line 27 (R skips 26 lines, so read line 27 as header)</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    cols <span class="op">=</span> pd.read_csv(filepath, skiprows<span class="op">=</span><span class="dv">26</span>, nrows<span class="op">=</span><span class="dv">0</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    cols_name <span class="op">=</span> cols.columns.tolist()</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Read actual data (R skips 28 lines, so data starts at line 29)</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    dat <span class="op">=</span> pd.read_csv(filepath, skiprows<span class="op">=</span><span class="dv">28</span>, header<span class="op">=</span><span class="va">None</span>)</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    dat.columns <span class="op">=</span> cols_name</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Read raw lines for metadata</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">with</span> <span class="bu">open</span>(filepath, <span class="st">"r"</span>) <span class="im">as</span> f:</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>        raw_dat <span class="op">=</span> f.readlines()</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extract LON</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    lon_line <span class="op">=</span> <span class="bu">next</span>(line <span class="cf">for</span> line <span class="kw">in</span> raw_dat <span class="cf">if</span> <span class="st">"LON"</span> <span class="kw">in</span> line)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    lon <span class="op">=</span> <span class="bu">float</span>(re.search(<span class="vs">r"=</span><span class="kw">(</span><span class="dv">.</span><span class="op">*</span><span class="kw">)</span><span class="vs">"</span>, lon_line).group(<span class="dv">1</span>).strip())</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extract LAT</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    lat_line <span class="op">=</span> <span class="bu">next</span>(line <span class="cf">for</span> line <span class="kw">in</span> raw_dat <span class="cf">if</span> <span class="st">"LAT"</span> <span class="kw">in</span> line)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    lat <span class="op">=</span> <span class="bu">float</span>(re.search(<span class="vs">r"=</span><span class="kw">(</span><span class="dv">.</span><span class="op">*</span><span class="kw">)</span><span class="vs">"</span>, lat_line).group(<span class="dv">1</span>).strip())</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add to dataframe</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    dat[<span class="st">"lon"</span>] <span class="op">=</span> lon</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    dat[<span class="st">"lat"</span>] <span class="op">=</span> lat</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extract DATE (second match, as in R)</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    date_lines <span class="op">=</span> [line <span class="cf">for</span> line <span class="kw">in</span> raw_dat <span class="cf">if</span> <span class="st">"DATE"</span> <span class="kw">in</span> line]</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    date_str <span class="op">=</span> re.search(<span class="vs">r"=</span><span class="kw">(</span><span class="dv">.</span><span class="op">*</span><span class="kw">)</span><span class="vs">"</span>, date_lines[<span class="dv">1</span>]).group(<span class="dv">1</span>).strip()</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    date_val <span class="op">=</span> pd.to_datetime(date_str).date()</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extract TIME</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>    time_line <span class="op">=</span> <span class="bu">next</span>(line <span class="cf">for</span> line <span class="kw">in</span> raw_dat <span class="cf">if</span> <span class="st">"TIME"</span> <span class="kw">in</span> line)</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>    time_str <span class="op">=</span> re.search(<span class="vs">r"= </span><span class="kw">(</span><span class="dv">.</span><span class="op">*</span><span class="kw">)</span><span class="vs">"</span>, time_line).group(<span class="dv">1</span>).strip()</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Parse TIME (e.g. "1025" → "10:25")</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    time_str_formatted <span class="op">=</span> re.sub(<span class="vs">r"</span><span class="dv">^</span><span class="kw">(</span><span class="pp">[0-9]</span><span class="op">{2}</span><span class="kw">)(</span><span class="pp">[0-9]</span><span class="op">+</span><span class="kw">)</span><span class="dv">$</span><span class="vs">"</span>, <span class="vs">r"</span><span class="ch">\1</span><span class="vs">:</span><span class="ch">\2</span><span class="vs">"</span>, time_str)</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>    time_val <span class="op">=</span> pd.to_datetime(time_str_formatted, <span class="bu">format</span><span class="op">=</span><span class="st">"%H:%M"</span>).time()</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Combine date and time</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    datetime_val <span class="op">=</span> datetime.combine(date_val, time_val)</span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add datetime to dataframe</span></span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>    dat[<span class="st">"datetime"</span>] <span class="op">=</span> datetime_val</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> dat</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="c2f00ec1" class="cell" data-execution_count="5">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Define the parent directory</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>parent_dir <span class="op">=</span> <span class="st">"C:/Users/flapet/OneDrive - NOC/Documents/IDAPro/lib/db_building/data/CTD/DY180/74EQ20240522_ct1"</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># List to hold each parsed DataFrame</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>dataframes <span class="op">=</span> []</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>idx <span class="op">=</span> <span class="dv">1</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Loop through all files in the parent directory and subdirectories</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> root, dirs, files <span class="kw">in</span> os.walk(parent_dir):</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> <span class="bu">file</span> <span class="kw">in</span> files:</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="bu">file</span>.endswith(<span class="st">".csv"</span>):</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>            file_path <span class="op">=</span> os.path.join(root, <span class="bu">file</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>            <span class="cf">try</span>:</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>                df <span class="op">=</span> read_ctd(file_path)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>                df[<span class="st">'profile_idx'</span>] <span class="op">=</span> idx</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>                dataframes.append(df)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>                idx <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>            <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>                <span class="bu">print</span>(<span class="ss">f"Failed to read </span><span class="sc">{</span>file_path<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine all dataframes into one</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>combined_df <span class="op">=</span> pd.concat(dataframes, ignore_index<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a><span class="co"># Display summary</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Loaded </span><span class="sc">{</span><span class="bu">len</span>(dataframes)<span class="sc">}</span><span class="ss"> files. Combined shape: </span><span class="sc">{</span>combined_df<span class="sc">.</span>shape<span class="sc">}</span><span class="ss">"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Loaded 52 files. Combined shape: (21863, 19)</code></pre>
+</div>
+</div>
+</section>
+<section id="make-a-plot-to-show-distance-of-gliders" class="level3">
+<h3 class="anchored" data-anchor-id="make-a-plot-to-show-distance-of-gliders">Make a plot to show distance of gliders</h3>
+<div id="170c78fa" class="cell" data-execution_count="6">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Group by 'profile_id' and 'glider_name', then aggregate median datetime, longitude, latitude</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>summary <span class="op">=</span> (</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    df_concat</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    .group_by([<span class="st">'profile_id'</span>, <span class="st">'glider_name'</span>])</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    .agg([</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>        pl.col(<span class="st">'TIME'</span>).median().alias(<span class="st">'median_datetime'</span>),</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        pl.col(<span class="st">'LONGITUDE'</span>).median().alias(<span class="st">'median_longitude'</span>),</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        pl.col(<span class="st">'LATITUDE'</span>).median().alias(<span class="st">'median_latitude'</span>)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    ])</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    .sort(<span class="st">'median_datetime'</span>)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to pandas DataFrame for easier display if needed</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>summary_pd <span class="op">=</span> summary.to_pandas()</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>summary_pd.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="6">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">profile_id</th>
+<th data-quarto-table-cell-role="th">glider_name</th>
+<th data-quarto-table-cell-role="th">median_datetime</th>
+<th data-quarto-table-cell-role="th">median_longitude</th>
+<th data-quarto-table-cell-role="th">median_latitude</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1.0_Cabot</td>
+<td>Cabot</td>
+<td>2024-05-28 12:59:48.193740288</td>
+<td>-24.001507</td>
+<td>60.000038</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1.0_Nelson</td>
+<td>Nelson</td>
+<td>2024-05-28 16:10:32.929382912</td>
+<td>-23.953222</td>
+<td>59.933823</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>2.0_Nelson</td>
+<td>Nelson</td>
+<td>2024-05-28 16:44:54.573363968</td>
+<td>-23.945343</td>
+<td>59.931000</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>3.0_Nelson</td>
+<td>Nelson</td>
+<td>2024-05-28 16:49:53.522613248</td>
+<td>-23.944508</td>
+<td>59.930759</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>4.0_Nelson</td>
+<td>Nelson</td>
+<td>2024-05-28 17:15:59.081421312</td>
+<td>-23.940367</td>
+<td>59.930614</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="4ff8685c" class="cell" data-execution_count="7">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Create a summary table from combined_df with one line per profile (grouped by 'datetime', 'lon', 'lat')</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>ctd_summary <span class="op">=</span> (</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    combined_df[[<span class="st">'datetime'</span>, <span class="st">'lon'</span>, <span class="st">'lat'</span>, <span class="st">'profile_idx'</span>]]</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    .drop_duplicates()</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    .reset_index(drop<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>ctd_summary.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">datetime</th>
+<th data-quarto-table-cell-role="th">lon</th>
+<th data-quarto-table-cell-role="th">lat</th>
+<th data-quarto-table-cell-role="th">profile_idx</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>2024-05-26 12:11:00</td>
+<td>-22.49730</td>
+<td>59.18032</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>2024-05-27 04:37:00</td>
+<td>-24.00044</td>
+<td>60.00012</td>
+<td>2</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>2024-05-27 07:40:00</td>
+<td>-24.00042</td>
+<td>60.00014</td>
+<td>3</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>2024-05-28 03:33:00</td>
+<td>-24.00016</td>
+<td>60.00016</td>
+<td>4</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>2024-05-28 05:28:00</td>
+<td>-24.00020</td>
+<td>60.00018</td>
+<td>5</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="29ea2e7a" class="cell" data-execution_count="8">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Prepare arrays for glider and CTD profile locations and times</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>glider_times <span class="op">=</span> summary_pd[<span class="st">'median_datetime'</span>].values</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>glider_lons <span class="op">=</span> summary_pd[<span class="st">'median_longitude'</span>].values</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>glider_lats <span class="op">=</span> summary_pd[<span class="st">'median_latitude'</span>].values</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>ctd_times <span class="op">=</span> ctd_summary[<span class="st">'datetime'</span>].values</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>ctd_lons <span class="op">=</span> ctd_summary[<span class="st">'lon'</span>].values</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>ctd_lats <span class="op">=</span> ctd_summary[<span class="st">'lat'</span>].values</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co"># For each glider profile, find the closest CTD profile in time and compute distance</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>closest_ctd_idx <span class="op">=</span> []</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>closest_time_diff <span class="op">=</span> []</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>distance_km <span class="op">=</span> []</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> g_time, g_lat, g_lon <span class="kw">in</span> <span class="bu">zip</span>(glider_times, glider_lats, glider_lons):</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Find index of closest CTD profile in time</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>    time_diffs <span class="op">=</span> <span class="bu">abs</span>(ctd_times <span class="op">-</span> g_time)</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>    idx <span class="op">=</span> time_diffs.argmin()</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>    closest_ctd_idx.append(idx)</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>    closest_time_diff.append(time_diffs[idx])</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Compute distance in km, handle nan coordinates</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>    glider_pos <span class="op">=</span> (g_lat, g_lon)</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>    ctd_pos <span class="op">=</span> (ctd_lats[idx], ctd_lons[idx])</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> np.isfinite(g_lat) <span class="kw">and</span> np.isfinite(g_lon) <span class="kw">and</span> np.isfinite(ctd_lats[idx]) <span class="kw">and</span> np.isfinite(ctd_lons[idx]):</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>        dist <span class="op">=</span> geodesic(glider_pos, ctd_pos).km</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>        dist <span class="op">=</span> np.nan</span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>    distance_km.append(dist)</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a><span class="co"># Add results to summary_pd</span></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>summary_pd[<span class="st">'closest_ctd_idx'</span>] <span class="op">=</span> closest_ctd_idx</span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>summary_pd[<span class="st">'ctd_time_diff'</span>] <span class="op">=</span> closest_time_diff</span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>summary_pd[<span class="st">'ctd_distance_km'</span>] <span class="op">=</span> distance_km</span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>summary_pd[[<span class="st">'profile_id'</span>, <span class="st">'glider_name'</span>, <span class="st">'median_datetime'</span>, <span class="st">'closest_ctd_idx'</span>, <span class="st">'ctd_time_diff'</span>, <span class="st">'ctd_distance_km'</span>]].head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="8">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">profile_id</th>
+<th data-quarto-table-cell-role="th">glider_name</th>
+<th data-quarto-table-cell-role="th">median_datetime</th>
+<th data-quarto-table-cell-role="th">closest_ctd_idx</th>
+<th data-quarto-table-cell-role="th">ctd_time_diff</th>
+<th data-quarto-table-cell-role="th">ctd_distance_km</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1.0_Cabot</td>
+<td>Cabot</td>
+<td>2024-05-28 12:59:48.193740288</td>
+<td>5</td>
+<td>0 days 01:15:48.193740288</td>
+<td>0.068635</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1.0_Nelson</td>
+<td>Nelson</td>
+<td>2024-05-28 16:10:32.929382912</td>
+<td>5</td>
+<td>0 days 04:26:32.929382912</td>
+<td>7.849181</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>2.0_Nelson</td>
+<td>Nelson</td>
+<td>2024-05-28 16:44:54.573363968</td>
+<td>5</td>
+<td>0 days 05:00:54.573363968</td>
+<td>8.298804</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>3.0_Nelson</td>
+<td>Nelson</td>
+<td>2024-05-28 16:49:53.522613248</td>
+<td>5</td>
+<td>0 days 05:05:53.522613248</td>
+<td>8.341018</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>4.0_Nelson</td>
+<td>Nelson</td>
+<td>2024-05-28 17:15:59.081421312</td>
+<td>5</td>
+<td>0 days 05:31:59.081421312</td>
+<td>8.445026</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="85dfb376" class="cell" data-execution_count="9">
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Get the last CTD profile datetime</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>last_ctd_time <span class="op">=</span> ctd_times[<span class="op">-</span><span class="dv">1</span>]</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter summary_pd to only include glider profiles up to the last CTD profile datetime</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>mask <span class="op">=</span> summary_pd[<span class="st">'median_datetime'</span>] <span class="op">&lt;=</span> last_ctd_time</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>filtered <span class="op">=</span> summary_pd[mask]</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Plot</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>plt.figure(figsize<span class="op">=</span>(<span class="dv">12</span>, <span class="dv">6</span>))</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> name, group <span class="kw">in</span> filtered.groupby(<span class="st">'glider_name'</span>):</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    plt.plot(group[<span class="st">'median_datetime'</span>], group[<span class="st">'ctd_distance_km'</span>], label<span class="op">=</span>name, marker<span class="op">=</span><span class="st">'o'</span>, linestyle<span class="op">=</span><span class="st">'-'</span>)</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>plt.xlabel(<span class="st">'Datetime'</span>)</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>plt.ylabel(<span class="st">'Distance to Closest CTD Profile (km)'</span>)</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>plt.ylim(<span class="dv">0</span>, <span class="dv">50</span>)</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>plt.title(<span class="st">'Glider Distance from CTD Over Time'</span>)</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>plt.legend()</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>plt.tight_layout()</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="gliders_comparison_files/figure-html/cell-9-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="generate-a-list-of-possible-candidate-profiles" class="level3">
+<h3 class="anchored" data-anchor-id="generate-a-list-of-possible-candidate-profiles">Generate a list of possible candidate profiles</h3>
+<div id="6d7b8233" class="cell" data-execution_count="10">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> geopy.distance <span class="im">import</span> geodesic</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> find_candidate_glider_ctd_pairs(glider_df, ctd_df, time_thresh_hr<span class="op">=</span><span class="dv">2</span>, dist_thresh_km<span class="op">=</span><span class="dv">5</span>):</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Identify all pairs of glider and CTD profiles within specified time (hours) and distance (km) thresholds.</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns a DataFrame of matching pairs with details.</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    matches <span class="op">=</span> []</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> _, g_row <span class="kw">in</span> glider_df.iterrows():</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> _, c_row <span class="kw">in</span> ctd_df.iterrows():</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Time difference</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>            time_diff_hr <span class="op">=</span> <span class="bu">abs</span>((g_row[<span class="st">'median_datetime'</span>] <span class="op">-</span> c_row[<span class="st">'datetime'</span>]).total_seconds()) <span class="op">/</span> <span class="fl">3600.0</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> time_diff_hr <span class="op">&gt;</span> time_thresh_hr:</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>                <span class="cf">continue</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Skip if coordinates are missing</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> pd.isnull(g_row[<span class="st">'median_latitude'</span>]) <span class="kw">or</span> pd.isnull(g_row[<span class="st">'median_longitude'</span>]) <span class="op">\</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>               <span class="kw">or</span> pd.isnull(c_row[<span class="st">'lat'</span>]) <span class="kw">or</span> pd.isnull(c_row[<span class="st">'lon'</span>]):</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>                <span class="cf">continue</span></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Distance in kilometers</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>            dist_km <span class="op">=</span> geodesic(</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>                (g_row[<span class="st">'median_latitude'</span>], g_row[<span class="st">'median_longitude'</span>]),</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>                (c_row[<span class="st">'lat'</span>], c_row[<span class="st">'lon'</span>])</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>            ).km</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> dist_km <span class="op">&gt;</span> dist_thresh_km:</span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>                <span class="cf">continue</span></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>            matches.append({</span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a>                <span class="st">'glider_profile_id'</span>: g_row[<span class="st">'profile_id'</span>],</span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>                <span class="st">'glider_name'</span>: g_row[<span class="st">'glider_name'</span>],</span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>                <span class="st">'ctd_profile_id'</span>: c_row.get(<span class="st">'profile_idx'</span>, <span class="va">None</span>),  <span class="co"># default to None if not present</span></span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a>                <span class="st">'time_diff_hr'</span>: time_diff_hr,</span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a>                <span class="st">'dist_km'</span>: dist_km</span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a>            })</span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> pd.DataFrame(matches)</span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="f433cd3d" class="cell" data-execution_count="11">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use the find_candidate_glider_ctd_pairs function with filtered and ctd_summary</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>candidates <span class="op">=</span> find_candidate_glider_ctd_pairs(</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    filtered,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    ctd_summary,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    time_thresh_hr<span class="op">=</span><span class="dv">12</span>,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    dist_thresh_km<span class="op">=</span><span class="dv">20</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Found </span><span class="sc">{</span><span class="bu">len</span>(candidates)<span class="sc">}</span><span class="ss"> candidate glider-CTD profile pairs within 12hr and 20km."</span>)</span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Show the first 5 candidates</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>candidates[:<span class="dv">5</span>]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Found 1038 candidate glider-CTD profile pairs within 12hr and 20km.</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="11">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">glider_profile_id</th>
+<th data-quarto-table-cell-role="th">glider_name</th>
+<th data-quarto-table-cell-role="th">ctd_profile_id</th>
+<th data-quarto-table-cell-role="th">time_diff_hr</th>
+<th data-quarto-table-cell-role="th">dist_km</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1.0_Cabot</td>
+<td>Cabot</td>
+<td>4</td>
+<td>9.446720</td>
+<td>0.076368</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1.0_Cabot</td>
+<td>Cabot</td>
+<td>5</td>
+<td>7.530054</td>
+<td>0.074613</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>1.0_Cabot</td>
+<td>Cabot</td>
+<td>6</td>
+<td>1.263387</td>
+<td>0.068635</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>1.0_Nelson</td>
+<td>Nelson</td>
+<td>5</td>
+<td>10.709147</td>
+<td>7.844838</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>1.0_Nelson</td>
+<td>Nelson</td>
+<td>6</td>
+<td>4.442480</td>
+<td>7.849181</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="a61d6ae2" class="cell" data-execution_count="12">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_heatmap_glider_df(glider_name, df, time_bins, dist_bins):</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Plot cumulative 2D histogram (heatmap) of matchups from a DataFrame for a specific glider.</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Parameters:</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co">    - glider_name: str, the glider to filter</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co">    - df: pd.DataFrame with required columns: </span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="co">          'glider_profile_id', 'glider_name', 'ctd_profile_id', 'time_diff_hr', 'dist_km'</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co">    - time_bins: array-like, bin edges for time (in hours)</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="co">    - dist_bins: array-like, bin edges for distance (in km)</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Filter DataFrame for selected glider</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    df_g <span class="op">=</span> df[df[<span class="st">'glider_name'</span>] <span class="op">==</span> glider_name]</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> df_g.empty:</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"No matchups found for glider '</span><span class="sc">{</span>glider_name<span class="sc">}</span><span class="ss">'."</span>)</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Extract arrays for histogram</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>    time_diffs <span class="op">=</span> df_g[<span class="st">'time_diff_hr'</span>].values</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>    dist_kms <span class="op">=</span> df_g[<span class="st">'dist_km'</span>].values</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Compute 2D histogram</span></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    H, xedges, yedges <span class="op">=</span> np.histogram2d(time_diffs, dist_kms, bins<span class="op">=</span>[time_bins, dist_bins])</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Cumulative sum along both axes</span></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>    H_cum <span class="op">=</span> H.cumsum(axis<span class="op">=</span><span class="dv">0</span>).cumsum(axis<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Plot heatmap</span></span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>    X, Y <span class="op">=</span> np.meshgrid(yedges, xedges)</span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>(<span class="dv">9</span>, <span class="dv">7</span>))</span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>    plt.pcolormesh(X, Y, H_cum, cmap<span class="op">=</span><span class="st">'PuBu'</span>, shading<span class="op">=</span><span class="st">'auto'</span>)</span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>    plt.colorbar(label<span class="op">=</span><span class="st">'Cumulative Number of Matchups'</span>)</span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="st">'Distance Threshold (km)'</span>)</span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">'Time Threshold (hr)'</span>)</span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="ss">f'Cumulative Matchups by Time/Distance</span><span class="ch">\n</span><span class="ss">Glider: </span><span class="sc">{</span>glider_name<span class="sc">}</span><span class="ss">'</span>)</span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Annotate each cell with value</span></span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(H_cum.shape[<span class="dv">0</span>]):</span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(H_cum.shape[<span class="dv">1</span>]):</span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a>            val <span class="op">=</span> <span class="bu">int</span>(H_cum[i, j])</span>
+<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> val <span class="op">&gt;</span> <span class="dv">0</span>:</span>
+<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a>                x_center <span class="op">=</span> (yedges[j] <span class="op">+</span> yedges[j<span class="op">+</span><span class="dv">1</span>]) <span class="op">/</span> <span class="dv">2</span></span>
+<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a>                y_center <span class="op">=</span> (xedges[i] <span class="op">+</span> xedges[i<span class="op">+</span><span class="dv">1</span>]) <span class="op">/</span> <span class="dv">2</span></span>
+<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a>                color <span class="op">=</span> <span class="st">'white'</span> <span class="cf">if</span> val <span class="op">&gt;</span> H_cum.<span class="bu">max</span>() <span class="op">/</span> <span class="dv">2</span> <span class="cf">else</span> <span class="st">'black'</span></span>
+<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a>                plt.text(x_center, y_center, <span class="bu">str</span>(val), ha<span class="op">=</span><span class="st">'center'</span>, va<span class="op">=</span><span class="st">'center'</span>, fontsize<span class="op">=</span><span class="dv">8</span>, color<span class="op">=</span>color)</span>
+<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="c7e41c5e" class="cell" data-execution_count="13">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>time_bins <span class="op">=</span> np.arange(<span class="dv">0</span>, <span class="dv">13</span>, <span class="dv">2</span>) </span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>dist_bins <span class="op">=</span> np.arange(<span class="dv">0</span>, <span class="dv">11</span>, <span class="dv">2</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Choose a specific glider, e.g., "Nelson"</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>glider_of_interest <span class="op">=</span> <span class="st">"Nelson"</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>plot_heatmap_glider_df(glider_of_interest, candidates, time_bins, dist_bins)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="gliders_comparison_files/figure-html/cell-13-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="cca700e4" class="cell" data-execution_count="14">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>plot_heatmap_glider_df(<span class="st">"Doombar"</span>, candidates, time_bins, dist_bins)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="gliders_comparison_files/figure-html/cell-14-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="490b4b63" class="cell" data-execution_count="15">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>plot_heatmap_glider_df(<span class="st">"Churchill"</span>, candidates, time_bins, dist_bins)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="gliders_comparison_files/figure-html/cell-15-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+<div id="b9a871a3" class="cell" data-execution_count="16">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>plot_heatmap_glider_df(<span class="st">"Cabot"</span>, candidates, time_bins, dist_bins)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="gliders_comparison_files/figure-html/cell-16-output-1.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="look-at-depth-bin-match-up" class="level3">
+<h3 class="anchored" data-anchor-id="look-at-depth-bin-match-up">Look at depth bin match up</h3>
+<div id="5bf509c4" class="cell" data-execution_count="17">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Interpolate DEPTH values per profile_id in df_concat (polars DataFrame)</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="co"># We'll use group_by and apply interpolation using polars' .interpolate() method</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>df_concat <span class="op">=</span> (</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    df_concat</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    .sort([<span class="st">'profile_id'</span>, <span class="st">'TIME'</span>])</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    .with_columns([</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>        pl.col(<span class="st">'DEPTH'</span>)</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>        .interpolate()</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>        .over(<span class="st">'profile_id'</span>)</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>        .alias(<span class="st">'DEPTH_interp'</span>)</span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    ])</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="96a21195" class="cell" data-execution_count="18">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Add a 'depth_bin' column to df_concat, binning 'DEPTH' in 50m intervals</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>df_concat <span class="op">=</span> df_concat.with_columns(</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    (<span class="op">-</span>(pl.col(<span class="st">"DEPTH_interp"</span>) <span class="op">//</span> <span class="dv">5</span>)).cast(pl.Int32).alias(<span class="st">"depth_bin"</span>))</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Add a 'depth_bin' column to combined_df, binning 'CTDPRS' in 50m intervals</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>combined_df[<span class="st">'depth_bin'</span>] <span class="op">=</span> pd.to_numeric(combined_df[<span class="st">'CTDPRS'</span>], errors<span class="op">=</span><span class="st">'coerce'</span>) <span class="op">//</span> <span class="dv">5</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>combined_df[<span class="st">'depth_bin'</span>] <span class="op">=</span> combined_df[<span class="st">'depth_bin'</span>].astype(<span class="st">'Int32'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="e0cfa435" class="cell" data-execution_count="19">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Group by 'profile_id', 'glider_name', and 'depth_bin', then aggregate median for selected variables</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>glider_binned <span class="op">=</span> (</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    df_concat</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    .group_by([<span class="st">'profile_id'</span>, <span class="st">'glider_name'</span>, <span class="st">'depth_bin'</span>])</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    .agg([</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>        pl.col(<span class="st">'TEMP'</span>).median().alias(<span class="st">'median_temp'</span>),</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>        pl.col(<span class="st">'ABS_SALINITY'</span>).median().alias(<span class="st">'median_salinity'</span>),</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>        pl.col(<span class="st">'CHLA'</span>).median().alias(<span class="st">'median_chla'</span>),</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>        pl.col(<span class="st">'BBP700'</span>).median().alias(<span class="st">'median_bbp'</span>),</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>        pl.col(<span class="st">'MOLAR_DOXY'</span>).median().alias(<span class="st">'median_doxy'</span>)</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    ])</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>    .sort([<span class="st">'profile_id'</span>, <span class="st">'depth_bin'</span>])</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Remove rows with any missing values in the aggregated table</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>glider_binned <span class="op">=</span> glider_binned.drop_nulls()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="d4b62252" class="cell" data-quarto-private-1="{&quot;key&quot;:&quot;vscode&quot;,&quot;value&quot;:{&quot;languageId&quot;:&quot;javascript&quot;}}" data-execution_count="20">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>ctd_binned <span class="op">=</span> (</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    combined_df</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    .groupby([<span class="st">'datetime'</span>, <span class="st">'lon'</span>, <span class="st">'lat'</span>, <span class="st">'depth_bin'</span>, <span class="st">'profile_idx'</span>], as_index<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    .agg({</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">' CTDTMP'</span>: <span class="st">'median'</span>,</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">' CTDSAL'</span>: <span class="st">'median'</span>,</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">' CTDTURB'</span>: <span class="st">'median'</span>,</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">' CTDOXY'</span>: <span class="st">'median'</span>,</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">' CTDFLUOR'</span>: <span class="st">'median'</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>ctd_binned <span class="op">=</span> pl.from_pandas(ctd_binned)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="4bb4465f" class="cell" data-execution_count="21">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert candidates to polars DataFrame</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>candidates_pl <span class="op">=</span> pl.from_pandas(candidates)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Join all depth bins for each glider_profile_id from glider_binned</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="co"># This will add all depth-bin data for each candidate glider profile</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>candidates_with_bins <span class="op">=</span> candidates_pl.join(</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    glider_binned,</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    left_on<span class="op">=</span><span class="st">"glider_profile_id"</span>,</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    right_on<span class="op">=</span><span class="st">"profile_id"</span>,</span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>    how<span class="op">=</span><span class="st">"inner"</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="ebe27bb9" class="cell" data-execution_count="22">
+<div class="sourceCode cell-code" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Join ctd_binned data to candidates_with_bins using ctd_profile_id and depth_bin</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>final_matched <span class="op">=</span> candidates_with_bins.join(</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    ctd_binned,</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    left_on<span class="op">=</span>[<span class="st">"ctd_profile_id"</span>, <span class="st">"depth_bin"</span>],</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    right_on<span class="op">=</span>[<span class="st">"profile_idx"</span>, <span class="st">"depth_bin"</span>],</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    how<span class="op">=</span><span class="st">"inner"</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="ffe9422e" class="cell" data-execution_count="23">
+<div class="sourceCode cell-code" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pybroom</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> sklearn.linear_model <span class="im">import</span> LinearRegression</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> numpy <span class="im">as</span> np</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> type2_regression_r2_pybroom(x, y):</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="co">    Compute R2 for type 2 regression (major axis regression) using pybroom.</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Remove NaNs</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>    mask <span class="op">=</span> np.isfinite(x) <span class="op">&amp;</span> np.isfinite(y)</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>    x_clean <span class="op">=</span> x[mask]</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a>    y_clean <span class="op">=</span> y[mask]</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">len</span>(x_clean) <span class="op">&lt;</span> <span class="dv">2</span>:</span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> np.nan</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Type 2 regression slope</span></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>    s_yx <span class="op">=</span> np.std(y_clean, ddof<span class="op">=</span><span class="dv">1</span>) <span class="op">/</span> np.std(x_clean, ddof<span class="op">=</span><span class="dv">1</span>)</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>    r <span class="op">=</span> np.corrcoef(x_clean, y_clean)[<span class="dv">0</span>, <span class="dv">1</span>]</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>    slope <span class="op">=</span> np.sign(r) <span class="op">*</span> s_yx</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>    intercept <span class="op">=</span> np.mean(y_clean) <span class="op">-</span> slope <span class="op">*</span> np.mean(x_clean)</span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a simple linear model for pybroom compatibility</span></span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># We'll use the type 2 regression parameters we calculated</span></span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a>    y_pred <span class="op">=</span> slope <span class="op">*</span> x_clean <span class="op">+</span> intercept</span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Calculate R2</span></span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a>    ss_res <span class="op">=</span> np.<span class="bu">sum</span>((y_clean <span class="op">-</span> y_pred) <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a>    ss_tot <span class="op">=</span> np.<span class="bu">sum</span>((y_clean <span class="op">-</span> np.mean(y_clean)) <span class="op">**</span> <span class="dv">2</span>)</span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a>    r2 <span class="op">=</span> <span class="dv">1</span> <span class="op">-</span> ss_res <span class="op">/</span> ss_tot <span class="cf">if</span> ss_tot <span class="op">&gt;</span> <span class="dv">0</span> <span class="cf">else</span> np.nan</span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> r2</span>
+<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Updated analysis using pybroom concepts</span></span>
+<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a><span class="co"># Group the final_matched DataFrame by 'glider_profile_id' and 'ctd_profile_id'</span></span>
+<span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a>grouped <span class="op">=</span> final_matched.to_pandas().groupby([<span class="st">'glider_profile_id'</span>, <span class="st">'ctd_profile_id'</span>])</span>
+<span id="cb25-37"><a href="#cb25-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-38"><a href="#cb25-38" aria-hidden="true" tabindex="-1"></a><span class="co"># Define var_pairs: pairs of columns to compare between glider and CTD datasets</span></span>
+<span id="cb25-39"><a href="#cb25-39" aria-hidden="true" tabindex="-1"></a>var_pairs <span class="op">=</span> [</span>
+<span id="cb25-40"><a href="#cb25-40" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'median_temp'</span>, <span class="st">' CTDTMP'</span>, <span class="st">'r2_temp'</span>),</span>
+<span id="cb25-41"><a href="#cb25-41" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'median_salinity'</span>, <span class="st">' CTDSAL'</span>, <span class="st">'r2_salinity'</span>),</span>
+<span id="cb25-42"><a href="#cb25-42" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'median_chla'</span>, <span class="st">' CTDFLUOR'</span>, <span class="st">'r2_chla'</span>),</span>
+<span id="cb25-43"><a href="#cb25-43" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'median_bbp'</span>, <span class="st">' CTDTURB'</span>, <span class="st">'r2_bbp'</span>),</span>
+<span id="cb25-44"><a href="#cb25-44" aria-hidden="true" tabindex="-1"></a>    (<span class="st">'median_doxy'</span>, <span class="st">' CTDOXY'</span>, <span class="st">'r2_doxy'</span>)</span>
+<span id="cb25-45"><a href="#cb25-45" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb25-46"><a href="#cb25-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-47"><a href="#cb25-47" aria-hidden="true" tabindex="-1"></a>results <span class="op">=</span> []</span>
+<span id="cb25-48"><a href="#cb25-48" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> keys, group <span class="kw">in</span> grouped:</span>
+<span id="cb25-49"><a href="#cb25-49" aria-hidden="true" tabindex="-1"></a>    row <span class="op">=</span> {<span class="st">'glider_profile_id'</span>: keys[<span class="dv">0</span>], <span class="st">'ctd_profile_id'</span>: keys[<span class="dv">1</span>]}</span>
+<span id="cb25-50"><a href="#cb25-50" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Add time and distance from the first row in group</span></span>
+<span id="cb25-51"><a href="#cb25-51" aria-hidden="true" tabindex="-1"></a>    first_row <span class="op">=</span> group.iloc[<span class="dv">0</span>]</span>
+<span id="cb25-52"><a href="#cb25-52" aria-hidden="true" tabindex="-1"></a>    row[<span class="st">'time_diff_hr'</span>] <span class="op">=</span> first_row[<span class="st">'time_diff_hr'</span>]</span>
+<span id="cb25-53"><a href="#cb25-53" aria-hidden="true" tabindex="-1"></a>    row[<span class="st">'dist_km'</span>] <span class="op">=</span> first_row[<span class="st">'dist_km'</span>]</span>
+<span id="cb25-54"><a href="#cb25-54" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb25-55"><a href="#cb25-55" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> g_col, c_col, out_col <span class="kw">in</span> var_pairs:</span>
+<span id="cb25-56"><a href="#cb25-56" aria-hidden="true" tabindex="-1"></a>        x <span class="op">=</span> group[g_col].to_numpy()</span>
+<span id="cb25-57"><a href="#cb25-57" aria-hidden="true" tabindex="-1"></a>        y <span class="op">=</span> group[c_col].to_numpy()</span>
+<span id="cb25-58"><a href="#cb25-58" aria-hidden="true" tabindex="-1"></a>        row[out_col] <span class="op">=</span> type2_regression_r2_pybroom(x, y)</span>
+<span id="cb25-59"><a href="#cb25-59" aria-hidden="true" tabindex="-1"></a>    results.append(row)</span>
+<span id="cb25-60"><a href="#cb25-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-61"><a href="#cb25-61" aria-hidden="true" tabindex="-1"></a><span class="co"># Convert to DataFrame</span></span>
+<span id="cb25-62"><a href="#cb25-62" aria-hidden="true" tabindex="-1"></a>r2_df <span class="op">=</span> pd.DataFrame(results)</span>
+<span id="cb25-63"><a href="#cb25-63" aria-hidden="true" tabindex="-1"></a>r2_df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>c:\Users\flapet\OneDrive - NOC\Documents\IDAPro\lib\db_building\db_env\lib\site-packages\numpy\lib\function_base.py:2897: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+c:\Users\flapet\OneDrive - NOC\Documents\IDAPro\lib\db_building\db_env\lib\site-packages\numpy\lib\function_base.py:2898: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+C:\Users\flapet\AppData\Local\Temp\ipykernel_19088\2122300192.py:18: RuntimeWarning: invalid value encountered in scalar divide
+  s_yx = np.std(y_clean, ddof=1) / np.std(x_clean, ddof=1)
+C:\Users\flapet\AppData\Local\Temp\ipykernel_19088\2122300192.py:18: RuntimeWarning: divide by zero encountered in scalar divide
+  s_yx = np.std(y_clean, ddof=1) / np.std(x_clean, ddof=1)</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="23">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">glider_profile_id</th>
+<th data-quarto-table-cell-role="th">ctd_profile_id</th>
+<th data-quarto-table-cell-role="th">time_diff_hr</th>
+<th data-quarto-table-cell-role="th">dist_km</th>
+<th data-quarto-table-cell-role="th">r2_temp</th>
+<th data-quarto-table-cell-role="th">r2_salinity</th>
+<th data-quarto-table-cell-role="th">r2_chla</th>
+<th data-quarto-table-cell-role="th">r2_bbp</th>
+<th data-quarto-table-cell-role="th">r2_doxy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>1.0_Churchill</td>
+<td>6</td>
+<td>6.745727</td>
+<td>4.995948</td>
+<td>0.230377</td>
+<td>0.686763</td>
+<td>-0.421579</td>
+<td>0.753172</td>
+<td>-0.682516</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>1.0_Doombar</td>
+<td>5</td>
+<td>11.836677</td>
+<td>6.322710</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>1.0_Doombar</td>
+<td>6</td>
+<td>5.570010</td>
+<td>6.326953</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+<td>NaN</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>10.0_Doombar</td>
+<td>7</td>
+<td>11.180101</td>
+<td>2.053647</td>
+<td>0.987247</td>
+<td>0.798226</td>
+<td>0.969626</td>
+<td>0.862134</td>
+<td>0.711562</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>100.0_Churchill</td>
+<td>20</td>
+<td>11.356362</td>
+<td>11.727578</td>
+<td>0.814471</td>
+<td>-0.508003</td>
+<td>0.855410</td>
+<td>0.777578</td>
+<td>0.944940</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="b0a624c1" class="cell" data-execution_count="24">
+<div class="sourceCode cell-code" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> plot_r2_heatmap(r2_df, time_thresh_hr<span class="op">=</span><span class="dv">5</span>, dist_thresh_km<span class="op">=</span><span class="dv">10</span>, r2_min<span class="op">=</span><span class="fl">0.7</span>, r2_max<span class="op">=</span><span class="fl">0.99</span>, r2_step<span class="op">=</span><span class="fl">0.01</span>):</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Plot a heatmap showing the number of unique CTD profiles that have R2 above given thresholds.</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co">    Each cell is annotated with the count.</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Filter by time and distance thresholds</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    df <span class="op">=</span> r2_df[(r2_df[<span class="st">'time_diff_hr'</span>] <span class="op">&lt;=</span> time_thresh_hr) <span class="op">&amp;</span> (r2_df[<span class="st">'dist_km'</span>] <span class="op">&lt;=</span> dist_thresh_km)]</span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Define specific R2 thresholds and variable names as requested</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>    r2_thresholds <span class="op">=</span> [<span class="fl">0.99</span>, <span class="fl">0.95</span>, <span class="fl">0.9</span>, <span class="fl">0.85</span>, <span class="fl">0.8</span>, <span class="fl">0.75</span>, <span class="fl">0.7</span>]</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>    variables <span class="op">=</span> [<span class="st">'r2_temp'</span>, <span class="st">'r2_salinity'</span>, <span class="st">'r2_chla'</span>, <span class="st">'r2_bbp'</span>, <span class="st">'r2_doxy'</span>]</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a>    var_labels <span class="op">=</span> [<span class="st">'Temp'</span>, <span class="st">'Salinity'</span>, <span class="st">'Chla'</span>, <span class="st">'BBP'</span>, <span class="st">'Doxy'</span>]</span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Initialize heatmap matrix</span></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>    heatmap <span class="op">=</span> np.zeros((<span class="bu">len</span>(variables), <span class="bu">len</span>(r2_thresholds)), dtype<span class="op">=</span><span class="bu">int</span>)</span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>    <span class="co"># For each variable and threshold, count unique CTD profiles with R2 &gt;= threshold</span></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i, var <span class="kw">in</span> <span class="bu">enumerate</span>(variables):</span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j, thresh <span class="kw">in</span> <span class="bu">enumerate</span>(r2_thresholds):</span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>            mask <span class="op">=</span> df[var] <span class="op">&gt;=</span> thresh</span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>            unique_ctd <span class="op">=</span> df.loc[mask, <span class="st">'ctd_profile_id'</span>].nunique()</span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>            heatmap[i, j] <span class="op">=</span> unique_ctd</span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create the plot</span></span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>    plt.figure(figsize<span class="op">=</span>(<span class="dv">10</span>, <span class="dv">6</span>))</span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>    im <span class="op">=</span> plt.imshow(heatmap, aspect<span class="op">=</span><span class="st">'auto'</span>, cmap<span class="op">=</span><span class="st">'PuBu'</span>, </span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a>                    extent<span class="op">=</span>[<span class="op">-</span><span class="fl">0.5</span>, <span class="bu">len</span>(r2_thresholds)<span class="op">-</span><span class="fl">0.5</span>, <span class="op">-</span><span class="fl">0.5</span>, <span class="bu">len</span>(variables)<span class="op">-</span><span class="fl">0.5</span>])</span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a>    plt.colorbar(im, label<span class="op">=</span><span class="st">'Number of Unique CTD Profiles'</span>)</span>
+<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Set axis labels and ticks</span></span>
+<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a>    plt.yticks(<span class="bu">range</span>(<span class="bu">len</span>(variables)), var_labels)</span>
+<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a>    plt.xticks(<span class="bu">range</span>(<span class="bu">len</span>(r2_thresholds)), [<span class="ss">f'</span><span class="sc">{</span>t<span class="sc">:.2f}</span><span class="ss">'</span> <span class="cf">for</span> t <span class="kw">in</span> r2_thresholds])</span>
+<span id="cb27-33"><a href="#cb27-33" aria-hidden="true" tabindex="-1"></a>    plt.xlabel(<span class="st">'R² Threshold'</span>)</span>
+<span id="cb27-34"><a href="#cb27-34" aria-hidden="true" tabindex="-1"></a>    plt.ylabel(<span class="st">'Variable'</span>)</span>
+<span id="cb27-35"><a href="#cb27-35" aria-hidden="true" tabindex="-1"></a>    plt.title(<span class="ss">f'Unique CTD Profiles with R² ≥ Threshold</span><span class="ch">\n</span><span class="ss">(Time ≤ </span><span class="sc">{</span>time_thresh_hr<span class="sc">}</span><span class="ss">hr, Distance ≤ </span><span class="sc">{</span>dist_thresh_km<span class="sc">}</span><span class="ss">km)'</span>)</span>
+<span id="cb27-36"><a href="#cb27-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-37"><a href="#cb27-37" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Annotate each cell with the exact count</span></span>
+<span id="cb27-38"><a href="#cb27-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> i <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(variables)):</span>
+<span id="cb27-39"><a href="#cb27-39" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> j <span class="kw">in</span> <span class="bu">range</span>(<span class="bu">len</span>(r2_thresholds)):</span>
+<span id="cb27-40"><a href="#cb27-40" aria-hidden="true" tabindex="-1"></a>            count <span class="op">=</span> heatmap[i, j]</span>
+<span id="cb27-41"><a href="#cb27-41" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Choose text color based on background intensity</span></span>
+<span id="cb27-42"><a href="#cb27-42" aria-hidden="true" tabindex="-1"></a>            text_color <span class="op">=</span> <span class="st">'white'</span> <span class="cf">if</span> count <span class="op">&gt;</span> heatmap.<span class="bu">max</span>() <span class="op">/</span> <span class="dv">2</span> <span class="cf">else</span> <span class="st">'black'</span></span>
+<span id="cb27-43"><a href="#cb27-43" aria-hidden="true" tabindex="-1"></a>            plt.text(j, i, <span class="bu">str</span>(count), ha<span class="op">=</span><span class="st">'center'</span>, va<span class="op">=</span><span class="st">'center'</span>, </span>
+<span id="cb27-44"><a href="#cb27-44" aria-hidden="true" tabindex="-1"></a>                    color<span class="op">=</span>text_color, fontsize<span class="op">=</span><span class="dv">10</span>, fontweight<span class="op">=</span><span class="st">'bold'</span>)</span>
+<span id="cb27-45"><a href="#cb27-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-46"><a href="#cb27-46" aria-hidden="true" tabindex="-1"></a>    plt.tight_layout()</span>
+<span id="cb27-47"><a href="#cb27-47" aria-hidden="true" tabindex="-1"></a>    plt.show()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="0ab16354" class="cell" data-execution_count="25">
+<div class="sourceCode cell-code" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Filter the r2_df for each glider and run the heatmap function</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>gliders <span class="op">=</span> [<span class="st">'Nelson'</span>, <span class="st">'Doombar'</span>, <span class="st">'Churchill'</span>, <span class="st">'Cabot'</span>]</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> glider <span class="kw">in</span> gliders:</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Filter the dataset for the current glider</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    filtered_r2_df <span class="op">=</span> r2_df[r2_df[<span class="st">'glider_profile_id'</span>].<span class="bu">str</span>.contains(<span class="ss">f"_</span><span class="sc">{</span>glider<span class="sc">}</span><span class="ss">$"</span>)]</span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">=== R² Heatmap for </span><span class="sc">{</span>glider<span class="sc">}</span><span class="ss"> ==="</span>)</span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a>    plot_r2_heatmap(</span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>        filtered_r2_df,</span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>        time_thresh_hr<span class="op">=</span><span class="dv">5</span>,</span>
+<span id="cb28-12"><a href="#cb28-12" aria-hidden="true" tabindex="-1"></a>        dist_thresh_km<span class="op">=</span><span class="dv">10</span></span>
+<span id="cb28-13"><a href="#cb28-13" aria-hidden="true" tabindex="-1"></a>    )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+=== R² Heatmap for Nelson ===</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="gliders_comparison_files/figure-html/cell-25-output-2.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+=== R² Heatmap for Doombar ===</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="gliders_comparison_files/figure-html/cell-25-output-4.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+=== R² Heatmap for Churchill ===</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="gliders_comparison_files/figure-html/cell-25-output-6.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+=== R² Heatmap for Cabot ===</code></pre>
+</div>
+<div class="cell-output cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="gliders_comparison_files/figure-html/cell-25-output-8.png" class="img-fluid figure-img"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="visualising-the-correlation" class="level1">
+<h1>Visualising the correlation</h1>
+<div id="4d9ed5ff" class="cell" data-execution_count="26">
+<div class="sourceCode cell-code" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a>filtered_r2_df <span class="op">=</span> r2_df[</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>    (r2_df[<span class="st">'r2_temp'</span>] <span class="op">&gt;=</span> <span class="fl">0.95</span>) <span class="op">|</span></span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    (r2_df[<span class="st">'r2_salinity'</span>] <span class="op">&gt;=</span> <span class="fl">0.9</span>) <span class="op">|</span></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>    (r2_df[<span class="st">'r2_chla'</span>] <span class="op">&gt;=</span> <span class="fl">0.9</span>) <span class="op">|</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a>    (r2_df[<span class="st">'r2_bbp'</span>] <span class="op">&gt;=</span> <span class="fl">0.9</span>) <span class="op">|</span></span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a>    (r2_df[<span class="st">'r2_doxy'</span>] <span class="op">&gt;=</span> <span class="fl">0.9</span>)</span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"Filtered DataFrame contains </span><span class="sc">{</span><span class="bu">len</span>(filtered_r2_df)<span class="sc">}</span><span class="ss"> rows."</span>)</span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a>filtered_r2_df.head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>Filtered DataFrame contains 845 rows.</code></pre>
+</div>
+<div class="cell-output cell-output-display" data-execution_count="26">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">glider_profile_id</th>
+<th data-quarto-table-cell-role="th">ctd_profile_id</th>
+<th data-quarto-table-cell-role="th">time_diff_hr</th>
+<th data-quarto-table-cell-role="th">dist_km</th>
+<th data-quarto-table-cell-role="th">r2_temp</th>
+<th data-quarto-table-cell-role="th">r2_salinity</th>
+<th data-quarto-table-cell-role="th">r2_chla</th>
+<th data-quarto-table-cell-role="th">r2_bbp</th>
+<th data-quarto-table-cell-role="th">r2_doxy</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">3</td>
+<td>10.0_Doombar</td>
+<td>7</td>
+<td>11.180101</td>
+<td>2.053647</td>
+<td>0.987247</td>
+<td>0.798226</td>
+<td>0.969626</td>
+<td>0.862134</td>
+<td>0.711562</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">4</td>
+<td>100.0_Churchill</td>
+<td>20</td>
+<td>11.356362</td>
+<td>11.727578</td>
+<td>0.814471</td>
+<td>-0.508003</td>
+<td>0.855410</td>
+<td>0.777578</td>
+<td>0.944940</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">5</td>
+<td>100.0_Churchill</td>
+<td>21</td>
+<td>4.623029</td>
+<td>12.006675</td>
+<td>0.970102</td>
+<td>0.909576</td>
+<td>0.804524</td>
+<td>0.898272</td>
+<td>0.109022</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">6</td>
+<td>100.0_Churchill</td>
+<td>22</td>
+<td>10.226971</td>
+<td>7.501200</td>
+<td>0.972238</td>
+<td>0.890185</td>
+<td>0.929320</td>
+<td>0.887400</td>
+<td>0.203537</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">9</td>
+<td>102.0_Churchill</td>
+<td>21</td>
+<td>9.637535</td>
+<td>18.113315</td>
+<td>0.974903</td>
+<td>0.894770</td>
+<td>0.851089</td>
+<td>0.941623</td>
+<td>-0.028293</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div id="16b7a205" class="cell" data-execution_count="27">
+<div class="sourceCode cell-code" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Initialize a dictionary to store DataFrames for each variable</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>variable_dfs <span class="op">=</span> {}</span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>churchill_filtered <span class="op">=</span> r2_df[r2_df[<span class="st">'glider_profile_id'</span>].<span class="bu">str</span>.contains(<span class="st">"Churchill"</span>)]</span>
+<span id="cb35-5"><a href="#cb35-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Iterate over each variable</span></span>
+<span id="cb35-6"><a href="#cb35-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> var <span class="kw">in</span> [<span class="st">'r2_temp'</span>, <span class="st">'r2_salinity'</span>, <span class="st">'r2_chla'</span>, <span class="st">'r2_bbp'</span>, <span class="st">'r2_doxy'</span>]:</span>
+<span id="cb35-7"><a href="#cb35-7" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Initialize an empty list to store the rows with the highest R² values for the current variable</span></span>
+<span id="cb35-8"><a href="#cb35-8" aria-hidden="true" tabindex="-1"></a>    selected_rows <span class="op">=</span> []</span>
+<span id="cb35-9"><a href="#cb35-9" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb35-10"><a href="#cb35-10" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Iterate over each unique CTD profile ID</span></span>
+<span id="cb35-11"><a href="#cb35-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> ctd_id <span class="kw">in</span> churchill_filtered[<span class="st">'ctd_profile_id'</span>].unique():</span>
+<span id="cb35-12"><a href="#cb35-12" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Filter rows for the current CTD profile ID</span></span>
+<span id="cb35-13"><a href="#cb35-13" aria-hidden="true" tabindex="-1"></a>        ctd_rows <span class="op">=</span> churchill_filtered[churchill_filtered[<span class="st">'ctd_profile_id'</span>] <span class="op">==</span> ctd_id]</span>
+<span id="cb35-14"><a href="#cb35-14" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb35-15"><a href="#cb35-15" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Select the row with the highest R² value for the current variable</span></span>
+<span id="cb35-16"><a href="#cb35-16" aria-hidden="true" tabindex="-1"></a>        max_row <span class="op">=</span> ctd_rows.loc[ctd_rows[var].idxmax()]</span>
+<span id="cb35-17"><a href="#cb35-17" aria-hidden="true" tabindex="-1"></a>        selected_rows.append(max_row)</span>
+<span id="cb35-18"><a href="#cb35-18" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb35-19"><a href="#cb35-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Create a DataFrame from the selected rows and store it in the dictionary</span></span>
+<span id="cb35-20"><a href="#cb35-20" aria-hidden="true" tabindex="-1"></a>    variable_dfs[var] <span class="op">=</span> pd.DataFrame(selected_rows).drop_duplicates()</span>
+<span id="cb35-21"><a href="#cb35-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb35-22"><a href="#cb35-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Access individual DataFrames using variable_dfs['r2_temp'], variable_dfs['r2_salinity'], etc.</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="b5012a2d" class="cell" data-execution_count="28">
+<div class="sourceCode cell-code" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_binned_data(variable_dfs, glider_binned, ctd_binned):</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a><span class="co">    Link variable_dfs with glider_binned and ctd_binned data to get full binned profile data.</span></span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a><span class="co">    Parameters:</span></span>
+<span id="cb36-6"><a href="#cb36-6" aria-hidden="true" tabindex="-1"></a><span class="co">    - variable_dfs: dict, DataFrames for each variable containing paired profiles.</span></span>
+<span id="cb36-7"><a href="#cb36-7" aria-hidden="true" tabindex="-1"></a><span class="co">    - glider_binned: polars.DataFrame, binned data for glider profiles.</span></span>
+<span id="cb36-8"><a href="#cb36-8" aria-hidden="true" tabindex="-1"></a><span class="co">    - ctd_binned: polars.DataFrame, binned data for CTD profiles.</span></span>
+<span id="cb36-9"><a href="#cb36-9" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb36-10"><a href="#cb36-10" aria-hidden="true" tabindex="-1"></a><span class="co">    Returns:</span></span>
+<span id="cb36-11"><a href="#cb36-11" aria-hidden="true" tabindex="-1"></a><span class="co">    - dict, updated variable_dfs with linked binned data.</span></span>
+<span id="cb36-12"><a href="#cb36-12" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span>
+<span id="cb36-13"><a href="#cb36-13" aria-hidden="true" tabindex="-1"></a>    updated_dfs <span class="op">=</span> {}</span>
+<span id="cb36-14"><a href="#cb36-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb36-15"><a href="#cb36-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> var, df <span class="kw">in</span> variable_dfs.items():</span>
+<span id="cb36-16"><a href="#cb36-16" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Convert the current DataFrame to polars for efficient joining</span></span>
+<span id="cb36-17"><a href="#cb36-17" aria-hidden="true" tabindex="-1"></a>        df_pl <span class="op">=</span> pl.from_pandas(df)</span>
+<span id="cb36-18"><a href="#cb36-18" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb36-19"><a href="#cb36-19" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Join with glider_binned to get binned glider data</span></span>
+<span id="cb36-20"><a href="#cb36-20" aria-hidden="true" tabindex="-1"></a>        df_with_glider_bins <span class="op">=</span> df_pl.join(</span>
+<span id="cb36-21"><a href="#cb36-21" aria-hidden="true" tabindex="-1"></a>            glider_binned,</span>
+<span id="cb36-22"><a href="#cb36-22" aria-hidden="true" tabindex="-1"></a>            left_on<span class="op">=</span><span class="st">"glider_profile_id"</span>,</span>
+<span id="cb36-23"><a href="#cb36-23" aria-hidden="true" tabindex="-1"></a>            right_on<span class="op">=</span><span class="st">"profile_id"</span>,</span>
+<span id="cb36-24"><a href="#cb36-24" aria-hidden="true" tabindex="-1"></a>            how<span class="op">=</span><span class="st">"inner"</span></span>
+<span id="cb36-25"><a href="#cb36-25" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb36-26"><a href="#cb36-26" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb36-27"><a href="#cb36-27" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Join with ctd_binned to get binned CTD data</span></span>
+<span id="cb36-28"><a href="#cb36-28" aria-hidden="true" tabindex="-1"></a>        df_with_ctd_bins <span class="op">=</span> df_with_glider_bins.join(</span>
+<span id="cb36-29"><a href="#cb36-29" aria-hidden="true" tabindex="-1"></a>            ctd_binned,</span>
+<span id="cb36-30"><a href="#cb36-30" aria-hidden="true" tabindex="-1"></a>            left_on<span class="op">=</span>[<span class="st">"ctd_profile_id"</span>, <span class="st">"depth_bin"</span>],</span>
+<span id="cb36-31"><a href="#cb36-31" aria-hidden="true" tabindex="-1"></a>            right_on<span class="op">=</span>[<span class="st">"profile_idx"</span>, <span class="st">"depth_bin"</span>],</span>
+<span id="cb36-32"><a href="#cb36-32" aria-hidden="true" tabindex="-1"></a>            how<span class="op">=</span><span class="st">"inner"</span></span>
+<span id="cb36-33"><a href="#cb36-33" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb36-34"><a href="#cb36-34" aria-hidden="true" tabindex="-1"></a>        </span>
+<span id="cb36-35"><a href="#cb36-35" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Convert back to pandas for compatibility</span></span>
+<span id="cb36-36"><a href="#cb36-36" aria-hidden="true" tabindex="-1"></a>        updated_dfs[var] <span class="op">=</span> df_with_ctd_bins.to_pandas()</span>
+<span id="cb36-37"><a href="#cb36-37" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb36-38"><a href="#cb36-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> updated_dfs</span>
+<span id="cb36-39"><a href="#cb36-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb36-40"><a href="#cb36-40" aria-hidden="true" tabindex="-1"></a><span class="co"># Example usage</span></span>
+<span id="cb36-41"><a href="#cb36-41" aria-hidden="true" tabindex="-1"></a>linked_variable_dfs <span class="op">=</span> get_binned_data(variable_dfs, glider_binned, ctd_binned)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div id="93164b6e" class="cell" data-execution_count="29">
+<div class="sourceCode cell-code" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a>linked_variable_dfs[<span class="st">'r2_temp'</span>].head()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-display" data-execution_count="29">
+<div>
+
+
+<table class="dataframe caption-top table table-sm table-striped small" data-quarto-postprocess="true" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th"></th>
+<th data-quarto-table-cell-role="th">glider_profile_id</th>
+<th data-quarto-table-cell-role="th">ctd_profile_id</th>
+<th data-quarto-table-cell-role="th">time_diff_hr</th>
+<th data-quarto-table-cell-role="th">dist_km</th>
+<th data-quarto-table-cell-role="th">r2_temp</th>
+<th data-quarto-table-cell-role="th">r2_salinity</th>
+<th data-quarto-table-cell-role="th">r2_chla</th>
+<th data-quarto-table-cell-role="th">r2_bbp</th>
+<th data-quarto-table-cell-role="th">r2_doxy</th>
+<th data-quarto-table-cell-role="th">glider_name</th>
+<th data-quarto-table-cell-role="th">...</th>
+<th data-quarto-table-cell-role="th">median_bbp</th>
+<th data-quarto-table-cell-role="th">median_doxy</th>
+<th data-quarto-table-cell-role="th">datetime</th>
+<th data-quarto-table-cell-role="th">lon</th>
+<th data-quarto-table-cell-role="th">lat</th>
+<th data-quarto-table-cell-role="th">CTDTMP</th>
+<th data-quarto-table-cell-role="th">CTDSAL</th>
+<th data-quarto-table-cell-role="th">CTDTURB</th>
+<th data-quarto-table-cell-role="th">CTDOXY</th>
+<th data-quarto-table-cell-role="th">CTDFLUOR</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">0</td>
+<td>9.0_Churchill</td>
+<td>6</td>
+<td>11.227399</td>
+<td>3.113512</td>
+<td>0.988175</td>
+<td>0.853081</td>
+<td>0.899825</td>
+<td>0.769347</td>
+<td>0.876936</td>
+<td>Churchill</td>
+<td>...</td>
+<td>0.000521</td>
+<td>365.635010</td>
+<td>2024-05-28 11:44:00</td>
+<td>-24.00032</td>
+<td>60.0002</td>
+<td>9.4511</td>
+<td>35.1753</td>
+<td>0.000280</td>
+<td>291.00</td>
+<td>0.70590</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">1</td>
+<td>9.0_Churchill</td>
+<td>6</td>
+<td>11.227399</td>
+<td>3.113512</td>
+<td>0.988175</td>
+<td>0.853081</td>
+<td>0.899825</td>
+<td>0.769347</td>
+<td>0.876936</td>
+<td>Churchill</td>
+<td>...</td>
+<td>0.000522</td>
+<td>365.716980</td>
+<td>2024-05-28 11:44:00</td>
+<td>-24.00032</td>
+<td>60.0002</td>
+<td>9.4263</td>
+<td>35.1796</td>
+<td>0.000233</td>
+<td>287.65</td>
+<td>0.50905</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">2</td>
+<td>9.0_Churchill</td>
+<td>6</td>
+<td>11.227399</td>
+<td>3.113512</td>
+<td>0.988175</td>
+<td>0.853081</td>
+<td>0.899825</td>
+<td>0.769347</td>
+<td>0.876936</td>
+<td>Churchill</td>
+<td>...</td>
+<td>0.000540</td>
+<td>365.972992</td>
+<td>2024-05-28 11:44:00</td>
+<td>-24.00032</td>
+<td>60.0002</td>
+<td>9.4256</td>
+<td>35.1874</td>
+<td>0.000178</td>
+<td>286.40</td>
+<td>0.34980</td>
+</tr>
+<tr class="even">
+<td data-quarto-table-cell-role="th">3</td>
+<td>9.0_Churchill</td>
+<td>6</td>
+<td>11.227399</td>
+<td>3.113512</td>
+<td>0.988175</td>
+<td>0.853081</td>
+<td>0.899825</td>
+<td>0.769347</td>
+<td>0.876936</td>
+<td>Churchill</td>
+<td>...</td>
+<td>0.000475</td>
+<td>366.453003</td>
+<td>2024-05-28 11:44:00</td>
+<td>-24.00032</td>
+<td>60.0002</td>
+<td>9.4049</td>
+<td>35.1914</td>
+<td>0.000152</td>
+<td>284.35</td>
+<td>0.26545</td>
+</tr>
+<tr class="odd">
+<td data-quarto-table-cell-role="th">4</td>
+<td>9.0_Churchill</td>
+<td>6</td>
+<td>11.227399</td>
+<td>3.113512</td>
+<td>0.988175</td>
+<td>0.853081</td>
+<td>0.899825</td>
+<td>0.769347</td>
+<td>0.876936</td>
+<td>Churchill</td>
+<td>...</td>
+<td>0.000371</td>
+<td>364.624023</td>
+<td>2024-05-28 11:44:00</td>
+<td>-24.00032</td>
+<td>60.0002</td>
+<td>9.3873</td>
+<td>35.1936</td>
+<td>0.000144</td>
+<td>283.90</td>
+<td>0.22860</td>
+</tr>
+</tbody>
+</table>
+
+<p>5 rows × 24 columns</p>
+</div>
+</div>
+</div>
+<div id="e3fb65eb" class="cell">
+<div class="cell-output cell-output-display">
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="gliders_comparison_files/figure-html/cell-30-output-1.png" class="img-fluid figure-img"></p>
+<figcaption>Scaterplot of the CTD and glider values for multiple variables.</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+        const codeEl = trigger.previousElementSibling.cloneNode(true);
+        for (const childEl of codeEl.children) {
+          if (isCodeAnnotation(childEl)) {
+            childEl.remove();
+          }
+        }
+        return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>
