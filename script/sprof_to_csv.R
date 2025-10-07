@@ -4,7 +4,7 @@ library(tidyr)
 library(lubridate)
 
 # open the Sprof NetCDF
-nc <- nc_open("data/argo_nc/3901586/3901586_Sprof.nc")
+nc <- nc_open("data/argo_nc/7902223/7902223_Sprof.nc")
 
 # extract metadata
 lon   <- ncvar_get(nc, "LONGITUDE")
@@ -13,12 +13,12 @@ juld  <- ncvar_get(nc, "JULD")  # days since 1950-01-01 00:00:00
 date  <- as.Date(juld, origin = "1950-01-01")
 
 # extract depth and variables (dimensions usually [levels x profiles])
-depth <- ncvar_get(nc, "PRES_ADJUSTED")   # or "DEPH" depending on file
+depth <- ncvar_get(nc, "PRES")  
 chla  <- ncvar_get(nc, "CHLA_ADJUSTED")
 bbp   <- ncvar_get(nc, "BBP700_ADJUSTED")   # sometimes "BBP700_ADJUSTED"
 ipar  <- ncvar_get(nc, "DOWNWELLING_PAR")
-temp  <- ncvar_get(nc, "TEMP_ADJUSTED")
-sal   <- ncvar_get(nc, "PSAL_ADJUSTED")
+temp  <- ncvar_get(nc, "TEMP")
+sal   <- ncvar_get(nc, "PSAL")
 nitrate <- ncvar_get(nc, "NITRATE")
 
 # close connection
@@ -142,4 +142,4 @@ for (p in unique(df_interp$prof_number)) {
 # save the csv ------------------------------------------------------------
 
 
-write_csv(df_interp, "argo_3901586_interp.csv")
+write_csv(df_interp, "argo_7902223_interp.csv")

@@ -1,0 +1,2 @@
+
+scp -P peppers*bodies8CHIVALRY JC269@serverftp.noc.soton.ac.uk:/Sensors_and_Moorings/CTD/Data/* C:/Users/flapet/OneDrive - NOC/Documents/IDAPro/lib/db_building/data/CTD/JC269/
