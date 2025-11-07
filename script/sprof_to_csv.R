@@ -2,9 +2,10 @@ library(ncdf4)
 library(dplyr)
 library(tidyr)
 library(lubridate)
+library(zoo)
 
 # open the Sprof NetCDF
-nc <- nc_open("data/argo_nc/7902223/7902223_Sprof.nc")
+nc <- nc_open("data/argo_nc/6990636_Sprof.nc")
 
 # extract metadata
 lon   <- ncvar_get(nc, "LONGITUDE")
@@ -20,6 +21,7 @@ ipar  <- ncvar_get(nc, "DOWNWELLING_PAR")
 temp  <- ncvar_get(nc, "TEMP")
 sal   <- ncvar_get(nc, "PSAL")
 nitrate <- ncvar_get(nc, "NITRATE")
+oxygen <- ncvar_get(nc, "DOXY_ADJUSTED")
 
 # close connection
 nc_close(nc)
@@ -44,7 +46,8 @@ df <- tibble(
   iPAR  = as.vector(ipar),
   temp  = as.vector(temp),
   sal   = as.vector(sal),
-  nitrate = as.vector(nitrate)
+  nitrate = as.vector(nitrate),
+  oxygen = as.vector(oxygen)
 )
 
 df_nona <- filter(df, !is.na(temp))
@@ -55,15 +58,15 @@ df_interp <- df_nona %>%
   arrange(depth, .by_group = TRUE) %>%
   reframe(
     depth = seq(0,
-                1000, 
+                2000, 
                 by = 1)
   ) %>%
   left_join(df_nona, by = c("lon", "lat", "date", "depth")) %>%
   arrange(lon, lat, date, depth) %>%
   group_by(lon, lat, date) %>%
   mutate(across(
-    c(chla, bbp, iPAR, temp, sal, nitrate),
-    ~ if (sum(!is.na(.x)) > 1) {
+    c(chla, bbp, oxygen, iPAR, temp, sal, nitrate),
+    ~ if (sum(!is.na(.x)) > 10) {
       na.approx(.x, x = depth, na.rm = FALSE, rule = 2)
     } else {
       rep(NA_real_, length(.x))  # if no interpolation possible
@@ -78,7 +81,46 @@ df_interp <- df_interp %>%
   arrange(date) %>% 
   mutate(prof_number = dense_rank(date))
 
+t <- filter(df_interp, prof_number == 12)
 
+ggplot(filter(df_interp, prof_number == 12 & depth < 200))+
+  geom_point(aes(x = chla, y = -depth))
+
+#Make TS diagram from df_interp
+ggplot(df_interp)+
+  geom_point(aes(x = sal, y = temp, color = -depth))+
+  scale_color_viridis_c()+
+  theme_dark()
+
+
+# TS diagram --------------------------------------------------------------
+
+library(oce)
+
+df_interp <- df_interp |> 
+  filter(sal > 34.5)
+df_interp$dens <- swSigmaTheta(df_interp$sal,
+                               df_interp$temp,
+                               df_interp$depth)
+
+# Create a contour grid for smooth isopycnals
+ts_grid <- expand.grid(
+  sal = seq(min(df_interp$sal), max(df_interp$sal), length = 100),
+  temp = seq(min(df_interp$temp), max(df_interp$temp), length = 100)
+)
+ts_grid$dens <- swSigmaTheta(ts_grid$sal, ts_grid$temp, rep(0, nrow(ts_grid)))
+
+ggplot(df_interp, aes(x = sal, y = temp)) +
+  geom_contour(data = ts_grid,
+               aes(z = dens),
+               color = "white", size = 0.4, alpha = 0.7) +
+  geom_point(aes(color = depth), size = 2, alpha = 0.7) +
+  scale_color_viridis_c(option = "turbo", direction = -1, name = "Depth (m)") +
+  scale_y_reverse() +
+  labs(x = "Salinity (psu)", y = "Temperature (°C)",
+       title = "T–S Diagram 4903659") +
+  theme_minimal(base_size = 13) +
+  theme(panel.grid = element_blank())
 # Plotting raw data -------------------------------------------------------
 
 # create folders
@@ -142,4 +184,4 @@ for (p in unique(df_interp$prof_number)) {
 # save the csv ------------------------------------------------------------
 
 
-write_csv(df_interp, "argo_7902223_interp.csv")
+write_csv(df_interp, "argo_6990636_interp.csv")

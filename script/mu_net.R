@@ -103,7 +103,16 @@ p0
 dat_all_pp <- left_join(dat_all_pp, prof_dat)
 
 
+data_to_share <- dat_all_pp |> 
+  select(lon, lat, date, nitrate, depth, chla, bbp, iPAR, temp, sal, cbpm_npp, mld_s) |> 
+  filter(prof_number >= 24) |> 
+  filter(!is.na(mld_s)) |> 
+  rename("MLD" = mld_s)
 
+write_csv(data_to_share, "output/float_nitrate_data.csv")
+
+ggplot(data_to_share)+
+  geom_point(aes(x = date, y = prof_number))
 
 # integrating ------------------------------------------------------------
 
@@ -117,13 +126,13 @@ integrated_val <- dat_all_pp |>
             npp_zeu = integrate(cbpm_npp, depth, from = 0, to = abs(unique(zeu))),
             carbon_mld = integrate(carbon, depth, from = 0, to = abs(unique(MLD))),
             carbon_zeu = integrate(carbon, depth, from = 0, to = abs(unique(zeu))),
-            nitrate_mld = integrate(nitrate * 1000, depth, from = 0, to = abs(unique(MLD))),
-            nitrate_prev = integrate(nitrate * 1000, depth, from = 0, to = abs(unique(prev_mld))),
-            nitrate_next = integrate(nitrate * 1000, depth, from = 0, to = abs(unique(next_mld))),
-            nitrate_zeu = integrate(nitrate * 1000, depth, from = 0, to = abs(unique(zeu))),
-            nitrate_prev_zeu = integrate(nitrate * 1000, depth, from = 0, to = abs(unique(prev_zeu))),
-            nitrate_next_zeu = integrate(nitrate * 1000, depth, from = 0, to = abs(unique(next_zeu))),
-            nitrate_prod = integrate(nitrate * 1000, depth, from = 0, to = 200),
+            nitrate_mld = integrate(nitrate , depth, from = 0, to = abs(unique(MLD))),
+            nitrate_prev = integrate(nitrate , depth, from = 0, to = abs(unique(prev_mld))),
+            nitrate_next = integrate(nitrate , depth, from = 0, to = abs(unique(next_mld))),
+            nitrate_zeu = integrate(nitrate , depth, from = 0, to = abs(unique(zeu))),
+            nitrate_prev_zeu = integrate(nitrate, depth, from = 0, to = abs(unique(prev_zeu))),
+            nitrate_next_zeu = integrate(nitrate , depth, from = 0, to = abs(unique(next_zeu))),
+            nitrate_prod = integrate(nitrate, depth, from = 0, to = 200),
             carbon_prev = integrate(carbon, depth, from = 0, to = abs(unique(prev_mld))),
             carbon_next = integrate(carbon, depth, from = 0, to = abs(unique(next_mld))),
             carbon_prev_zeu = integrate(carbon, depth, from = 0, to = abs(unique(prev_zeu))),
@@ -268,8 +277,8 @@ prof_dat1 <- prof_dat1 |>
          nitrate_p = case_when(mld_s > zeu ~ nitrate_mld_s,
                                mld_s < zeu ~ nitrate_zeu_s),
          nitrate_p_diff = nitrate_p - lag(nitrate_p),
-         mol_c_diff = nitrate_mld_diff_s * 10e-6 * 6.6,
-         mg_c_diff = mol_c_diff * 12 * 1000)
+         mol_c_diff = nitrate_mld_diff_s * 6.6,
+         mg_c_diff = mol_c_diff * 12)
 
 prof_dat1 <- prof_dat1 |> mutate(rate_mld = (1/mld_s) * (MLD_diff/date_diff))
 
@@ -318,7 +327,7 @@ ggplot(prof_dat1)+
 ggplot(prof_dat1)+
   geom_line(aes(x = date, y = npp_mld_s, color = "NPP MLD"))+
   geom_line(aes(x = date, y = npp_zeu_s, color = "NPP Zeu"))+
-  geom_line(aes(x = date, y = -ncp_mld_s*100, color = "NCP"))+
+  geom_line(aes(x = date, y = -ncp_mld_s, color = "NCP"))+
   theme_bw(base_size = 14)+
   ylab("productivity (mg C m-2 d-1)")
 

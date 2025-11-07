@@ -76,7 +76,7 @@ ggplot(dat)+
   xlab("Date")+
   scale_color_brewer(palette = "Set1", name = "CTD cast")
 
-ggsave("output/plots/ctd_float_time_summary_non_biocarbon.png", dpi = 300, width = 22, height = 15, units = "cm")
+#ggsave("output/plots/ctd_float_time_summary_non_biocarbon.png", dpi = 300, width = 22, height = 15, units = "cm")
 
 float_localisation <- dat |> 
   mutate(type = "Float", profile_id = paste(wmo, substr(JULD, 1, 10), sep = "_")) |> 
@@ -153,8 +153,22 @@ ggplot(matches_filtered, aes(x = as.numeric(time_diff))) +
   ) +
   theme_minimal()
 
+position_to_share <- float_localisation |> filter(mission %in% c(4903659, 6990636))
 
-# Prepare matches with time in hours
+#plot position to share with coastline
+ggplot()+
+  borders("world", colour = "gray85", fill = "gray80")+
+  geom_path(data = position_to_share, aes(x = lon, y = lat, group = mission))+
+  geom_point(data = position_to_share, aes(x = lon, y = lat, color = mission), size = 2)+
+  coord_quickmap(xlim = c(-33, -10), ylim = c(58, 64))+
+  theme_minimal()+
+  labs(title = "Float Positions", x = "Longitude", y = "Latitude", color = "Float WMO")
+
+ggsave("output/plots/float_positions_to_share.png", dpi = 300, width = 20, height = 15, units = "cm")
+
+write_csv(position_to_share, "output/float_positions_4903659_and_6990636.csv")
+
+# Prepare matches with time in hours# Prepafilter_()re matches with time in hours
 matches_binned <- matches_filtered %>%
   mutate(
     time_hours = as.numeric(time_diff, units = "hours"),
@@ -282,6 +296,8 @@ ggplot(matches_boxplot)+
   geom_boxplot(aes(x = stn, y = spatial_dist_km, fill = Location))+
   theme_bw()+
   xlab("Station name")
+ggsave("output/plots/station_to_floats_distance.png", dpi = 300, width = 30, height = 25, units = "cm")
+
 
 ggplot(matches_boxplot)+
   geom_boxplot(aes(x = stn, y = spatial_dist_km, fill = mission_float), position = "dodge")+
@@ -294,8 +310,11 @@ ggplot(matches_boxplot)+
   xlab("Station name")+
   facet_wrap(.~mission_float)
 
+
 ggplot(matches_boxplot)+
   geom_point(aes(x = stn, y = spatial_dist_km, color = Location), size = 2)+
   theme_bw()+
   xlab("Station name")+
   facet_wrap(.~ mission_float, ncol = 1)
+ggsave("output/plots/floats_distance_to_stations.png", dpi = 300, width = 30, height = 25, units = "cm")
+
