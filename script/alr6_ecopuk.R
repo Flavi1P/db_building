@@ -78,13 +78,20 @@ ggplot(dat_to_plot) +
   coord_quickmap()
 ggsave("ALR6_traj.jpg", width = 30, height = 20, units = "cm", dpi = 300)
 
-fluo_joined <- 
-  fluo_joined |> mutate(datetime = as.POSIXct(nav_timestamp, origin = "1970-01-01", tz = "UTC"))
+fluo_joined <- fluo_joined |> mutate(datetime = as.POSIXct(nav_timestamp, origin = "1970-01-01", tz = "UTC"))
+
 ggplot(fluo_joined)+
   geom_line(aes(x = datetime, y = -depth))
 
 fluo_joined <- fluo_joined |> 
-  mutate("auv" = "ALR6")
+  mutate("auv" = "ALR6") |> 
+  mutate(fluo = (param3 - 49) * 0.0073,
+         beta = (V6 - 49) * 4.513e-7)|> 
+  select(nav_timestamp, datetime, lon, lat, depth, fluo, beta)
+
+ggplot(filter(fluo_joined, depth < 100))+
+  geom_path(aes(x = datetime, y = -depth, color = fluo))+
+  scale_color_viridis_c(name = "Fluorescence (mg m-3)")
 
 write_csv(fluo_joined, "output/ALR6_fluorometer_data.csv")
 

@@ -86,4 +86,14 @@ ggsave("ALR_transect.jpg", width = 30, height = 20, units = "cm", dpi = 300)
 fluo_joined <- fluo_joined |> 
   mutate("auv" = "ALR4")
 
+fluo_joined <- fluo_joined |> 
+  mutate(fluo = (param3 - 45) * 0.0072,
+         beta = (V6 - 49) * 1.836e-06) |> 
+  select(nav_timestamp, datetime, lon, lat, depth, fluo, beta)
+
+
+ggplot(fluo_joined)+
+  geom_line(aes(x = datetime, y = -depth, color = fluo))+
+  scale_color_viridis_c(name = "Fluorescence (mg m-3)")
+
 write_csv(fluo_joined, "output/ALR4_fluorometer_data.csv")

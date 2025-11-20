@@ -55,20 +55,33 @@ df <- df %>%
   mutate(datetime = lubridate::as_datetime(OCSTime, tz="UTC"))
 # ---- 6. Example: show first rows ----
 
-ggplot(df)+
-  geom_point(aes(x = Wavelength, y = Counts, color = datetime))
+#ggplot(df)+
+#  geom_point(aes(x = Wavelength, y = Counts, color = datetime))
 
 trios_timestamps <- df |> select(datetime) |> unique()
 
-eco_data_matched <- eco_data |> 
-  select(depth, datetime, lon, lat) |> 
-  distinct() |> 
-  rowwise() |> 
-  mutate(
-    datetime = lubridate::as_datetime(datetime, tz="UTC"),
-    nearest_trios_time = trios_timestamps$datetime[which.min(abs(trios_timestamps$datetime - datetime))]
-  ) |> 
-  ungroup()
+library(data.table)
+
+# convert to data.table
+eco_dt   <- as.data.table(eco_data)[, .(depth, datetime, lon, lat)]
+trios_dt <- as.data.table(trios_timestamps)[, .(datetime)]
+
+# make sure both datetime columns are POSIXct
+eco_dt[,   datetime := as.POSIXct(datetime, tz = "UTC")]
+trios_dt[, datetime := as.POSIXct(datetime, tz = "UTC")]
+
+# sort trios timestamps (required for rolling join)
+setkey(trios_dt, datetime)
+
+# find nearest timestamp by rolling join (bidirectional)
+eco_dt[
+  trios_dt,
+  nearest_trios_time := i.datetime,
+  on = .(datetime),
+  roll = "nearest"
+]
+
+eco_data_matched <- eco_dt |> as_tibble() |> na.omit()
 
 eco_data_to_match <- eco_data_matched |> 
   mutate(diff_time = nearest_trios_time - datetime) |> 
@@ -84,6 +97,27 @@ trios_matched <- eco_data_to_match |>
     by = c("nearest_trios_time" = "datetime")
   )
 
-ggplot(trios_matched)+
-  geom_point(aes(x = Wavelength, y = Counts, color = depth))+
+trios_matched <- trios_matched |> 
+  mutate(intesity = Counts / 653535)
+
+smaller_trios <- filter(trios_matched, depth > 1 & depth < 30 & Wavelength > 400 & Wavelength < 800)
+
+ggplot(smaller_trios)+
+  geom_path(aes(x = Wavelength, y = intesity, color = depth, group = nearest_trios_time))+
   scale_color_viridis_c()
+ggsave("ALR6_trios_spectra.jpg", width = 30, height = 20, units = "cm", dpi = 300)
+
+ggplot(eco_data_to_match)+
+  geom_point(aes(x = nearest_trios_time, y = -depth))
+
+samples <- smaller_trios |> select(nearest_trios_time) |> unique()
+
+test <- smaller_trios |> filter(nearest_trios_time %in% samples$nearest_trios_time[c(1052:1200)])
+
+ggplot(test)+
+  geom_path(aes(x = Wavelength, y = intesity, color = depth, group = nearest_trios_time))+
+  scale_color_viridis_c()
+
+write_csv(test, "output/ALR6_sample_data.csv")
+
+write_csv(trios_matched, "data/ALR/alr6_ramses_timed.csv")
